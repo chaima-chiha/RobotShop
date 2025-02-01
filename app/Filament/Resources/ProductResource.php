@@ -12,8 +12,10 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+
+use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Columns\ImageColumn;
+
 
 
 class ProductResource extends Resource
@@ -44,6 +46,15 @@ class ProductResource extends Resource
                 ->relationship('category', 'name')
                 ->required(),
 
+                FileUpload::make('image')
+                ->image()
+                ->imageEditor()
+                ->directory('products')
+                ->visibility('public')
+                ->preserveFilenames()
+                ->maxSize(5120)
+                ->downloadable()
+                ->columnSpanFull(),
 
 
         ]);
@@ -59,7 +70,11 @@ class ProductResource extends Resource
             Tables\Columns\TextColumn::make('category.name'),
             Tables\Columns\TextColumn::make('price'),
             Tables\Columns\TextColumn::make('stock'),
-           
+            ImageColumn::make('image')
+                    ->label('Image')
+                    ->disk('public')
+                    ->width(100)
+                    ->height(100),
 
             Tables\Columns\TextColumn::make('created_at')
                 ->dateTime(),

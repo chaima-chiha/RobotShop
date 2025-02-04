@@ -36,6 +36,12 @@ class Product extends Model implements HasMedia
     {
         return $this->image ? Storage::url($this->image) : null;
     }
+    // Relation avec les vidéos
+    public function videos()
+    {
+        return $this->belongsToMany(Video::class)
+                    ->withTimestamps();
+    }
 }
 
 

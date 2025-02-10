@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\UserResource\Api\Transformers\UserTransformer;
 
 class UserResource extends Resource
 {
@@ -86,4 +87,9 @@ class UserResource extends Resource
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
+    public static function getApiTransformer()
+    {
+        return UserTransformer::class;
+    }
+
 }

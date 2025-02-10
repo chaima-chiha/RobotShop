@@ -2,27 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\SignupRequest;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 
 
 class UserAuthController extends Controller
 {
-    function signup(Request $request){
-    //validation?? email
-            $input =$request->all();
+    public function signup(SignupRequest $request)
+    {
+        // Les données sont déjà validées ici
+        $input = $request->validated();
+        $input['password'] = bcrypt($input['password']);
 
-            //min6car?
-            $input['password'] = bcrypt($input['password']);
-            $user = User::create($input);
-            $success['token']= $user->createToken('MyApp')->plainTextToken;
-            //non caratc sp
-            $success['name']= $user->name;
-            return ['result'=> $success, 'msg'=>"user register successfully"];
-        }
+        $user = User::create($input);
+        $success['token'] = $user->createToken('MyApp')->plainTextToken;
+        $success['name'] = $user->name;
+
+        return response()->json([
+            'result' => $success,
+            'msg' => "User registered successfully"
+        ]);
+    }
     public function login(LoginRequest $request)
         {
             $input = $request->validated(); // Récupère uniquement les données validées

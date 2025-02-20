@@ -2,17 +2,20 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
-use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Models\User;
 use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Resources\Resource;
+use Spatie\Permission\Models\Role;
+use Filament\Tables\Actions\Action;
+use Illuminate\Support\Facades\Hash;
+use Filament\Notifications\Notification;
+use Illuminate\Validation\Rules\Password;
+use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\Api\Transformers\UserTransformer;
+
 
 class UserResource extends Resource
 {
@@ -33,12 +36,12 @@ class UserResource extends Resource
                     ->maxLength(255),
                 Forms\Components\DateTimePicker::make('email_verified_at'),
                 Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->required()
-                    ->maxLength(255),
+                ->password()
+                ->required()
+                ->maxLength(255),
+
             ]);
     }
-
     public static function table(Table $table): Table
     {
         return $table
@@ -47,6 +50,16 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
+
+                Tables\Columns\TextColumn::make('role')
+                    ->label('Rôle')
+                    ->getStateUsing(fn (User $user) => $user->getRoleNames()) // Récupère le rôle depuis Spatie
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'admin' => 'success',
+                        'client' => 'warning',
+                        default => 'gray',
+                    }),
                 Tables\Columns\TextColumn::make('email_verified_at')
                     ->dateTime()
                     ->sortable(),
@@ -63,7 +76,31 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                //Tables\Actions\EditAction::make(),
+                Action::make('changePassword')
+                ->action(function (User $record, array $data): void {
+                    $record->update([
+                        'password' => Hash::make($data['new_password']),
+                    ]);
+
+                    Notification::make()
+                    ->title('Success')
+                    ->body('Password changed successfully.')
+                    ->success()
+                    ->send();
+                })
+                ->form([
+                    Forms\Components\TextInput::make('new_password')
+                        ->password()
+                        ->label('New Password')
+                        ->required()
+                        ->rule(Password::default()),
+                    Forms\Components\TextInput::make('new_password_confirmation')
+                        ->password()
+                        ->label('Confirm New Password')
+                        ->rule('required', fn($get) => ! ! $get('new_password'))
+                        ->same('new_password'),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -91,5 +128,6 @@ class UserResource extends Resource
     {
         return UserTransformer::class;
     }
+
 
 }

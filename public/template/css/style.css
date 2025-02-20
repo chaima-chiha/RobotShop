@@ -7,6 +7,48 @@ VERSION:	Versoin Number
 /*------------------------------------------------------------------
 [TABLE OF CONTENTS]
 -------------------------------------------------------------------*/
+
+
+
+
+
+
+  .product-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 5px;
+    max-width: 250px;
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .product-card img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .product-card .price {
+    font-weight: bold;
+    color: #e91e63;
+  }
+
+  .add-to-cart {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .add-to-cart:hover {
+    background-color: #45a049;
+  }
+
+
+
 /*  typography */
 @import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700");
 @font-face {

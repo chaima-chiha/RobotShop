@@ -12,7 +12,7 @@ document.getElementById('LoginForm').addEventListener('submit', function(e) {
             localStorage.setItem('token', response.data.token);
 
             // Redirection après connexion réussie
-            window.location.href = '/admin/users';
+            window.location.href = '/pofil';
         })
         .catch(function (error) {
             // Gestion des erreurs

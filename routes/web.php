@@ -1,15 +1,16 @@
 <?php
 
-use App\Filament\Resources\ProductResource\Api\ProductApiService;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
+use App\Filament\Resources\ProductResource\Api\ProductApiService;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', function () { return view('layouts.app');});
+Route::get('/home', function () { return view('client.home'); });
+
+Route::get('/pofil', function () {return view('client.profil');});
 
 
-//Route::get('/products', function () {
-    return view('products');})->middleware('auth:sanctum');
+Route::get('/products', function () {return view('products.index');});
 
-//Route::middleware('auth:sanctum')->post('/{panel}/products', [ProductApiService::class, 'store'])->name('api.admin.products.create');
-
+Route::get('/products/{id}', function () {return view('products.show');});
+Route::get('/index', function () { return view('client.index'); });

@@ -60,9 +60,8 @@ class UserResource extends Resource
                         'client' => 'warning',
                         default => 'gray',
                     }),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
+               // Tables\Columns\TextColumn::make('email_verified_at')
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -124,10 +123,7 @@ class UserResource extends Resource
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
-    public static function getApiTransformer()
-    {
-        return UserTransformer::class;
-    }
+
 
 
 }

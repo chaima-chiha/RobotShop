@@ -1,100 +1,95 @@
-<!-- footer -->
-<footer>
-    <!-- newsletter -->
-    <div class="newsletter">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-9 ml-auto bg-primary py-5 newsletter-block">
-            <h3 class="text-white">Subscribe Now</h3>
-            <form action="#">
-              <div class="input-wrapper">
-                <input type="email" class="form-control border-0" id="newsletter" name="newsletter" placeholder="Enter Your Email...">
-                <button type="submit" value="send" class="btn btn-primary">Join</button>
-              </div>
-            </form>
-          </div>
+<!-- Footer Start -->
+<div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5">
+    <div class="container py-5">
+        <div class="pb-4 mb-4" style="border-bottom: 1px solid rgba(226, 175, 24, 0.5) ;">
+            <div class="row g-4">
+                <div class="col-lg-3">
+                    <a href="#">
+                        <h1 class="text-primary mb-0">RobotShopAcademy</h1>
+                        <p class="text-secondary mb-0">New Products</p>
+                    </a>
+                </div>
+                <div class="col-lg-6">
+                    <div class="position-relative mx-auto">
+                        <input class="form-control border-0 w-100 py-3 px-4 rounded-pill" type="number" placeholder="Your Email">
+                        <button type="submit" class="btn btn-primary border-0 border-secondary py-3 px-4 position-absolute rounded-pill text-white" style="top: 0; right: 0;">Subscribe Now</button>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="d-flex justify-content-end pt-3">
+                        <a class="btn  btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-outline-secondary btn-md-square rounded-circle" href=""><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <!-- footer content -->
-    <div class="footer bg-footer section border-bottom">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-4 col-sm-8 mb-5 mb-lg-0">
-            <!-- logo -->
-            <a class="logo-footer" href="index.html"><img class="img-fluid mb-4" src="images/logo.png" alt="logo"></a>
-            <ul class="list-unstyled">
-              <li class="mb-2">23621 15 Mile Rd #C104, Clinton MI, 48035, New York, USA</li>
-              <li class="mb-2">+1 (2) 345 6789</li>
-              <li class="mb-2">+1 (2) 345 6789</li>
-              <li class="mb-2">contact@yourdomain.com</li>
-            </ul>
-          </div>
-          <!-- company -->
-          <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-5 mb-md-0">
-            <h4 class="text-white mb-5">COMPANY</h4>
-            <ul class="list-unstyled">
-              <li class="mb-3"><a class="text-color" href="about.html">About Us</a></li>
-              <li class="mb-3"><a class="text-color" href="teacher.html">Our Teacher</a></li>
-              <li class="mb-3"><a class="text-color" href="contact.html">Contact</a></li>
-              <li class="mb-3"><a class="text-color" href="blog.html">Blog</a></li>
-            </ul>
-          </div>
-          <!-- links -->
-          <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-5 mb-md-0">
-            <h4 class="text-white mb-5">LINKS</h4>
-            <ul class="list-unstyled">
-              <li class="mb-3"><a class="text-color" href="courses.html">Courses</a></li>
-              <li class="mb-3"><a class="text-color" href="event.html">Events</a></li>
-              <li class="mb-3"><a class="text-color" href="gallary.html">Gallary</a></li>
-              <li class="mb-3"><a class="text-color" href="faqs.html">FAQs</a></li>
-            </ul>
-          </div>
-          <!-- support -->
-          <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-5 mb-md-0">
-            <h4 class="text-white mb-5">SUPPORT</h4>
-            <ul class="list-unstyled">
-              <li class="mb-3"><a class="text-color" href="#">Forums</a></li>
-              <li class="mb-3"><a class="text-color" href="#">Documentation</a></li>
-              <li class="mb-3"><a class="text-color" href="#">Language</a></li>
-              <li class="mb-3"><a class="text-color" href="#">Release Status</a></li>
-            </ul>
-          </div>
-          <!-- support -->
-          <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-5 mb-md-0">
-            <h4 class="text-white mb-5">RECOMMEND</h4>
-            <ul class="list-unstyled">
-              <li class="mb-3"><a class="text-color" href="#">WordPress</a></li>
-              <li class="mb-3"><a class="text-color" href="#">LearnPress</a></li>
-              <li class="mb-3"><a class="text-color" href="#">WooCommerce</a></li>
-              <li class="mb-3"><a class="text-color" href="#">bbPress</a></li>
-            </ul>
-          </div>
+        <div class="row g-5">
+            <div class="col-lg-3 col-md-6">
+                <div class="footer-item">
+                    <h4 class="text-light mb-3">Why People Like us!</h4>
+                    <p class="mb-4">typesetting, remaining essentially unchanged. It was
+                        popularised in the 1960s with the like Aldus PageMaker including of Lorem Ipsum.</p>
+                    <a href="" class="btn border-secondary py-2 px-4 rounded-pill text-primary">Read More</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="d-flex flex-column text-start footer-item">
+                    <h4 class="text-light mb-3">Shop Info</h4>
+                    <a class="btn-link" href="">About Us</a>
+                    <a class="btn-link" href="">Contact Us</a>
+                    <a class="btn-link" href="">Privacy Policy</a>
+                    <a class="btn-link" href="">Terms & Condition</a>
+                    <a class="btn-link" href="">Return Policy</a>
+                    <a class="btn-link" href="">FAQs & Help</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="d-flex flex-column text-start footer-item">
+                    <h4 class="text-light mb-3">Account</h4>
+                    <a class="btn-link" href="">My Account</a>
+                    <a class="btn-link" href="">Shop details</a>
+                    <a class="btn-link" href="">Shopping Cart</a>
+                    <a class="btn-link" href="">Wishlist</a>
+                    <a class="btn-link" href="">Order History</a>
+                    <a class="btn-link" href="">International Orders</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="footer-item">
+                    <h4 class="text-light mb-3">Contact</h4>
+                    <p>Address: 19 Rue El Jahedh ,Nabeul ,8011</p>
+                    <p>RobotShopAcademy@gmail.com</p>
+                    <p>Phone: +216 99 847 516</p>
+                    <p>Payment Accepter</p>
+                    <img src="img/payment.png" class="img-fluid" alt="">
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-    <!-- copyright -->
-    <div class="copyright py-4 bg-footer">
-      <div class="container">
+</div>
+<!-- Footer End -->
+
+<!-- Copyright Start -->
+<div class="container-fluid copyright bg-dark py-4">
+    <div class="container">
         <div class="row">
-          <div class="col-sm-7 text-sm-left text-center">
-            <p class="mb-0">Copyright
-              <script>
-                var CurrentYear = new Date().getFullYear()
-                document.write(CurrentYear)
-              </script>
-              © Theme By <a href="https://themefisher.com">themefisher.com</a></p> . All Rights Reserved.
-          </div>
-          <div class="col-sm-5 text-sm-right text-center">
-            <ul class="list-inline">
-              <li class="list-inline-item"><a class="d-inline-block p-2" href="https://www.facebook.com/themefisher"><i class="ti-facebook text-primary"></i></a></li>
-              <li class="list-inline-item"><a class="d-inline-block p-2" href="https://www.twitter.com/themefisher"><i class="ti-twitter-alt text-primary"></i></a></li>
-              <li class="list-inline-item"><a class="d-inline-block p-2" href="#"><i class="ti-instagram text-primary"></i></a></li>
-              <li class="list-inline-item"><a class="d-inline-block p-2" href="https://dribbble.com/themefisher"><i class="ti-dribbble text-primary"></i></a></li>
-            </ul>
-          </div>
+            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>Your Site Name</a>, All right reserved.</span>
+            </div>
+            <div class="col-md-6 my-auto text-center text-md-end text-white">
+                <!--/*** This template is free as long as you keep the below author’s credit link/attribution link/backlink. ***/-->
+                <!--/*** If you'd like to use the template without the below author’s credit link/attribution link/backlink, ***/-->
+                <!--/*** you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". ***/-->
+                Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a> Distributed By <a class="border-bottom" href="https://themewagon.com">ThemeWagon</a>
+            </div>
         </div>
-      </div>
     </div>
-  </footer>
-  <!-- /footer -->
+</div>
+<!-- Copyright End -->
+
+
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>

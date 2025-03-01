@@ -66,7 +66,7 @@ class ProductResource extends Resource
         ->columns([
             Tables\Columns\TextColumn::make('refrence'),
             Tables\Columns\TextColumn::make('name'),
-            Tables\Columns\TextColumn::make('description'),
+            //Tables\Columns\TextColumn::make('description'),
             Tables\Columns\TextColumn::make('category.name'),
             Tables\Columns\TextColumn::make('price'),
             Tables\Columns\TextColumn::make('stock'),

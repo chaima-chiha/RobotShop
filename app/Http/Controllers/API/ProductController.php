@@ -27,11 +27,27 @@ class ProductController extends Controller
             'success' => true,
             'data' => $product
         ]);
-    }*/
+    }
 
     public function index()
     {
         $products = Product::with('category')->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $products
+        ]);
+    }*/
+    public function index(Request $request)
+    {
+        $query = Product::with('category');
+
+        // Filtrer par catégorie si le paramètre est présent
+        if ($request->has('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        $products = $query->get();
 
         return response()->json([
             'success' => true,

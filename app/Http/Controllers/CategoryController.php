@@ -33,4 +33,21 @@ class CategoryController extends Controller
             'data' => $category
         ]);
     }
+
+    public function productsByCategory($id)
+{
+    $category = Category::with('products')->find($id);
+
+    if (!$category) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Catégorie non trouvée'
+        ], 404);
+    }
+
+    return response()->json([
+        'success' => true,
+        'data' => $category->products
+    ]);
+}
 }

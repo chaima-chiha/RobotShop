@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e2aea4a1360b823789f09673f8271737",
+    "content-hash": "68bfa0d690953ac1d5c301d72632920a",
     "packages": [
         {
             "name": "althinect/filament-spatie-roles-permissions",
@@ -134,6 +134,85 @@
                 "source": "https://github.com/AnourValar/eloquent-serialize/tree/1.2.28"
             },
             "time": "2025-01-27T15:13:13+00:00"
+        },
+        {
+            "name": "binafy/laravel-cart",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/binafy/laravel-cart.git",
+                "reference": "49114f77c9b6f71cbf9ba34bace60a1d1fa2742c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/binafy/laravel-cart/zipball/49114f77c9b6f71cbf9ba34bace60a1d1fa2742c",
+                "reference": "49114f77c9b6f71cbf9ba34bace60a1d1fa2742c",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": ">=9.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.5",
+                "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0",
+                "pestphp/pest-plugin-laravel": "^1.4.0|^2.0.0|^3.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Binafy\\LaravelCart\\Providers\\LaravelCartServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Binafy\\LaravelCart\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "milwad-dev",
+                    "email": "milwad.dev@gmail.com",
+                    "homepage": "https://github.com/milwad-dev",
+                    "role": "author"
+                },
+                {
+                    "name": "binafy",
+                    "homepage": "https://github.com/binafy",
+                    "role": "owner"
+                }
+            ],
+            "description": "Laravel Cart is a customizable package for adding shopping cart functionality to Laravel applications",
+            "homepage": "https://github.com/binafy/laravel-cart",
+            "keywords": [
+                "Laravel Basket",
+                "Laravel cart",
+                "Laravel shopping cart",
+                "binafy",
+                "cart",
+                "framework",
+                "laravel",
+                "laravel cart package",
+                "laravel e-commerce",
+                "laravel package",
+                "laravel shopping",
+                "laravel-cart",
+                "laravel-cart-shop",
+                "laravel-shop",
+                "laravelshoppingcart",
+                "milwad"
+            ],
+            "support": {
+                "issues": "https://github.com/binafy/laravel-cart/issues",
+                "source": "https://github.com/binafy/laravel-cart/tree/v1.2.0"
+            },
+            "time": "2025-02-25T20:34:16+00:00"
         },
         {
             "name": "blade-ui-kit/blade-heroicons",

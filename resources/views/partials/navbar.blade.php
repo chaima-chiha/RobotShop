@@ -10,27 +10,43 @@
         <div class="container topbar bg-primary d-none d-lg-block">
             <div class="d-flex justify-content-between">
                 <div class="top-info ps-2">
-                    <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">19 Rue El Jahedh ,Nabeul</a></small>
+
+                    <small class="me-3"><i class="fas fa-solid fa-phone-volume me-2 text-secondary"></i> <a href="#" class="text-white">+216 99 847 516</a></small>
                     <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">RobotShopAcademy@gmail.com</a></small>
+                    <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">19 Rue El Jahedh ,Nabeul</a></small>
+
                 </div>
                 <div class="top-link pe-2">
-                    <a href="#" class="text-white"><small class="text-white mx-2">facebook</small>/</a>
-                    <a href="#" class="text-white"><small class="text-white mx-2">Instagramme</small>/</a>
-                    <a href="#" class="text-white"><small class="text-white ms-2">linkedin</small></a>
-                </div>
+                    <a class=" text-white p-sm-2 py-2 px-0 d-inline-block  fas fa-user " href="#" data-bs-toggle="modal" data-bs-target="#signupModal"> s'inscrire</a>
+                    <a class=" text-white p-sm-2 py-2 px-0 d-inline-block" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">/ se connecter</a>
+</div>
             </div>
         </div>
         <div class="container px-0">
             <nav class="navbar navbar-light bg-white navbar-expand-xl">
-                <a href="index.html" class="navbar-brand"><h1 class="text-primary display-6">RobotShopAcademy</h1></a>
+                <a href="index.html" class="navbar-brand"><h1 class="text-primary display-6">RobotShop</h1> <p class="text-secondary mb-0 " >Academy</p></a>
                 <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span class="fa fa-bars text-primary"></span>
                 </button>
                 <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                     <div class="navbar-nav mx-auto">
                         <a href="/products" class="nav-item nav-link active">Acceuil</a>
-                        <a href="shop.html" class="nav-item nav-link">cathégoies</a>
-                        <a href="shop-detail.html" class="nav-item nav-link">formations</a>
+                        <a href="/products" class="nav-item nav-link active">produits</a>
+                         <!-- Menu déroulant pour les catégories -->
+                        <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Catégories
+                        </a>
+                        <div class="dropdown-menu m-0 bg-secondary rounded-0" aria-labelledby="categoriesDropdown" id="categoriesMenu">
+                            <!-- Les catégories seront injectées ici dynamiquement -->
+                            @include('products.categories_js')
+                            <span class="dropdown-item">Chargement des catégories...</span>
+                        </div>
+
+                        </div>
+
+
+                        <a href="shop-detail.html" class="nav-item nav-link active">formations</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                             <div class="dropdown-menu m-0 bg-secondary rounded-0">
@@ -43,17 +59,13 @@
                         <a href="contact.html" class="nav-item nav-link">Contact</a>
 
                     </div>
+
                     <div class="d-flex m-3 me-0">
                         <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>
                         <a href="#" class="position-relative me-4 my-auto">
                             <i class="fa fa-shopping-bag fa-2x"></i>
                             <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
                         </a>
-                        <a href="/pofil" class="my-auto">
-                            <i class="fas fa-user fa-2x"></i>
-                        </a>
-                       <a class="text-uppercase text-color p-sm-2 py-2 px-0 d-inline-block" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">login</a>
-                        <a class="text-uppercase text-color p-sm-2 py-2 px-0 d-inline-block" href="#" data-bs-toggle="modal" data-bs-target="#signupModal">register</a>
 
                     </div>
                 </div>
@@ -65,9 +77,9 @@
 
     <!-- Modal Search Start -->
     <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content rounded-0">
-                <div class="modal-header">
+        <div class="modal-dialog  modal-lg" role="document">
+            <div class="modal-content rounded-0 border-0 p-4">
+                <div class="modal-header border-0 p-4">
                     <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -148,6 +160,7 @@
 </div>
 
 <!-- sign up -->
-<script src="{{ asset('js/register.js') }}"></script>
+@include('partials.register')
 <!-- login.js -->
-<script src="{{ asset('js/login.js') }}"></script>
+@include('partials.login')
+

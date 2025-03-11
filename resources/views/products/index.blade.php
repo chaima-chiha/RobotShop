@@ -11,11 +11,11 @@
             <div class="container py-5">
                 <div class="tab-class text-center">
                     <div class="row g-4">
-                        <div class="col-lg-4 text-start">
+                        <div class="col-lg-6 text-start">
                             <h1>Liste des Produits</h1>
                         </div>
 
-                        <div class="col-lg-8 text-end">
+                        <div class="col-lg-6 text-end">
                             <ul class="nav nav-pills d-inline-flex text-center mb-5">
                                 <li class="nav-item">
                                     <a class="d-flex m-2 py-2 bg-light rounded-pill active" data-bs-toggle="pill" href="#tab-1">

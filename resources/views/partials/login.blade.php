@@ -1,3 +1,4 @@
+<script>
 document.getElementById('LoginForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
@@ -10,12 +11,9 @@ document.getElementById('LoginForm').addEventListener('submit', function(e) {
         .then(function (response) {
 
             // Stockage du token reçu après login
-            localStorage.setItem('token', response.data.token);
-             // Vérification du stockage du token
-             console.log(' enregistré :', response.data.name);
-
+           localStorage.setItem('token', response.data.result.token);
             // Redirection après connexion réussie
-            window.location.href = '/pofil';
+           window.location.href = '/pofil';
         })
         .catch(function (error) {
             // Gestion des erreurs
@@ -29,3 +27,4 @@ document.getElementById('LoginForm').addEventListener('submit', function(e) {
             }
         });
 });
+</script>

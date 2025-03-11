@@ -28,11 +28,14 @@
 
         <!-- Template Stylesheet -->
         <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+
+
     </head>
     <body>
 
     @include('partials.navbar')  <!-- Inclure la navbar  -->
-   
+
+
 
     <div class="container mt-4 app">
         @yield('content')

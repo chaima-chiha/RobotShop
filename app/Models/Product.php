@@ -42,6 +42,12 @@ class Product extends Model
         return $this->belongsToMany(Video::class)
                     ->withTimestamps();
     }
+
+    //relation avec le panier
+    public function cart()
+    {
+        return $this->belongsToMany(Cart::class);
+    }
 }
 
 

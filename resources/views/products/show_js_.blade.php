@@ -1,4 +1,5 @@
 
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const productId = window.location.pathname.split('/').pop();
@@ -31,37 +32,54 @@ document.addEventListener('DOMContentLoaded', function () {
                     <p class="text-muted">${product.category ? product.category.name : 'Aucune catégorie'}</p>
                     <h3 class="text-primary">${product.price} dt</h3>
                     <p>${product.description || 'Aucune description disponible.'}</p>
-                    <button id="addToCartBtn" class="btn btn-primary">Ajouter au panier</button>
+                   <button id="add-to-cart-btn" class="btn border border-secondary rounded-pill  text-primary fa fa-shopping-bag me-2 ">   Ajouter au panier</button>
                     <a href="/" class="btn btn-secondary">Retour</a>
                 </div>
             </div>
         `;
 
-        // Ajouter un événement au bouton "Ajouter au panier"
-        document.getElementById('addToCartBtn').addEventListener('click', function () {
-            addToCart(product);
+        // Ajouter un gestionnaire d'événements pour le bouton
+        const addToCartButton = document.getElementById('add-to-cart-btn');
+        addToCartButton.addEventListener('click', function () {
+            addToCart(product.id);
         });
     }
 
-    function addToCart(product) {
-        axios.post('/api/cart/add', {
-            id: product.id,
-            name: product.name,
-            price: product.price,
+        function addToCart(productId) {
+        const token = localStorage.getItem('token');
+
+        // Vérifier si le jeton est défini
+        if (!token) {
+            console.error('Token not found in localStorage');
+            alert('Vous devez être connecté pour ajouter des produits au panier.');
+            return;
+        }
+        axios.post('/api/cart', {
+            product_id: productId,
             quantity: 1
+        }, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         })
         .then(response => {
-            alert('Produit ajouté au panier !');
-            console.log(response.data);
+            if (response.data.success) {
+                alert('Produit ajouté au panier avec succès!');
+            } else {
+                alert('Erreur lors de l\'ajout du produit au panier.');
+            }
         })
         .catch(error => {
-            console.error('Erreur lors de l\'ajout au panier:', error);
+            console.error('Erreur lors de l\'ajout du produit au panier:', error);
+            alert('Erreur lors de l\'ajout du produit au panier.');
         });
     }
+
 
     fetchProductDetails(productId);
 });
+</script>
 
 
-    </script>
+
 

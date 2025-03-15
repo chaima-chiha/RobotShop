@@ -17,7 +17,7 @@
 
                 </div>
                 <div class="top-link pe-2">
-                    <a class=" text-white p-sm-2 py-2 px-0 d-inline-block  fas fa-user " href="#" data-bs-toggle="modal" data-bs-target="#signupModal"> s'inscrire</a>
+                    <a class=" text-white p-sm-2 py-2 px-0 d-inline-block  " href="#" data-bs-toggle="modal" data-bs-target="#signupModal"> s'inscrire</a>
                     <a class=" text-white p-sm-2 py-2 px-0 d-inline-block" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">/ se connecter</a>
 </div>
             </div>
@@ -57,7 +57,7 @@
                             </div>
                         </div>
                         <a href="contact.html" class="nav-item nav-link">Contact</a>
-
+                        <a href="/profil" class="nav-item nav-link  fas fa-user ">Mon Compte</a>
                     </div>
 
                     <div class="d-flex m-3 me-0">

@@ -17,7 +17,7 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
             localStorage.setItem('token', response.data.result.token);
 
             // Redirection vers la liste des produits
-            window.location.href = '/pofil';
+            window.location.href = '/profil';
         })
         .catch(function (error) {
             // Gestion des erreurs

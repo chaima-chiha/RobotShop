@@ -9,15 +9,16 @@
             const token = localStorage.getItem('token');
 
 
-            axios.get('/api/user',{
+            axios.get('/api/profile',{
                         headers: {
                             'Authorization': `Bearer ${localStorage.getItem('token')}`
                         }
                     })
 
                 .then(response => {
-                    const userDetails = response.data.user;
+                    const userDetails = response.data;
                     const userDetailsDiv = document.getElementById('user-details');
+
                     userDetailsDiv.innerHTML = `
                         <p><strong>Name:</strong> ${userDetails.name}</p>
                         <p><strong>Email:</strong> ${userDetails.email}</p>

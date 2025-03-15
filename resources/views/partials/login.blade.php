@@ -13,7 +13,7 @@ document.getElementById('LoginForm').addEventListener('submit', function(e) {
             // Stockage du token reçu après login
            localStorage.setItem('token', response.data.result.token);
             // Redirection après connexion réussie
-           window.location.href = '/pofil';
+           window.location.href = '/profil';
         })
         .catch(function (error) {
             // Gestion des erreurs

@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Hash;
 class ClientController extends Controller
 {
     public function profile(Request $request)
-    {
-        return response()->json(['user' => $request->user()]);
+     {
+        return $request->user();
     }
 
     public function orders(Request $request)
@@ -34,7 +34,7 @@ class ClientController extends Controller
 
     // Valider les données entrantes
     $validatedData = $request->validate([
-        
+
         'email' => 'sometimes|required|email|unique:users,email,' . $user->id,
         'password' => 'nullable|string|min:8|confirmed',
     ]);

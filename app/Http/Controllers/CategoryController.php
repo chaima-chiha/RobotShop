@@ -35,19 +35,26 @@ class CategoryController extends Controller
     }
 
     public function productsByCategory($id)
-{
-    $category = Category::with('products')->find($id);
+    {
+        // Charger la catégorie avec ses produits associés
+        $category = Category::with('products')->find($id);
 
-    if (!$category) {
+        if (!$category) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Catégorie non trouvée'
+            ], 404);
+        }
+
+        // Ajouter le nom de la catégorie à chaque produit
+        $category->products->each(function ($product) use ($category) {
+            $product->category_name = $category->name;
+        });
+
         return response()->json([
-            'success' => false,
-            'message' => 'Catégorie non trouvée'
-        ], 404);
+            'success' => true,
+            'data' => $category->products
+        ]);
     }
 
-    return response()->json([
-        'success' => true,
-        'data' => $category->products
-    ]);
-}
 }

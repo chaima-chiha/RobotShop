@@ -50,20 +50,21 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
     public function sendPasswordResetNotification($token)
-{
-    $this->notify(new ResetPasswordNotification($token));
-}
+    {
+        $this->notify(new ResetPasswordNotification($token));
+    }
 
-public function orders()
-{
-   // return $this->hasMany(Order::class);
-}
+    public function orders()
+    {
+    //return $this->hasMany(Order::class);
+    }
 
-public function cart()
-{
-    return $this->hasMany(Cart::class);
-}
+    public function cart()
+    {
+        return $this->hasMany(Cart::class);
+    }
 
 }
 

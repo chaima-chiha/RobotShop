@@ -8,16 +8,23 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-   /* public function index()
+    public function index()
     {
+        // Charger tous les produits avec leurs catégories associées
+        $products = Product::with('category:id,name')->get();
 
-          $products = Product::all();
-            return response()->json([
+        // Ajouter le nom de la catégorie à chaque produit
+        $products->each(function ($product) {
+            $product->category_name = $product->category->name;
+            unset($product->category); // Optionnel : supprimer l'objet catégorie si vous n'en avez plus besoin
+        });
+
+        return response()->json([
             'success' => true,
             'data' => $products
-
         ]);
     }
+
 
     public function show($id)
     {
@@ -29,60 +36,5 @@ class ProductController extends Controller
         ]);
     }
 
-    public function index()
-    {
-        $products = Product::with('category')->get();
 
-        return response()->json([
-            'success' => true,
-            'data' => $products
-        ]);
-    }*/
-    public function index(Request $request)
-    {
-        $query = Product::with('category');
-
-        // Filtrer par catégorie si le paramètre est présent
-        if ($request->has('category')) {
-            $query->where('category_id', $request->category);
-        }
-
-        $products = $query->get();
-
-        return response()->json([
-            'success' => true,
-            'data' => $products
-        ]);
-    }
-
-    public function show($id)
-    {
-        $product = Product::with('category')->find($id);
-
-        if (!$product) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Produit non trouvé'
-            ], 404);
-        }
-
-        return response()->json([
-            'success' => true,
-            'data' => $product
-        ]);
-    }
-
-
-
-    public function getByCategory($category_id)
-    {
-        $products = Product::where('category_id', $category_id)
-            ->with(['category', 'videos'])
-            ->get();
-
-        return response()->json([
-            'success' => true,
-            'data' => $products
-        ]);
-    }
 }

@@ -158,7 +158,23 @@
         transition: .5s;
         opacity: 0;
     }
+
 }
+@media (max-width: 1000px) {
+    .topbar .top-info {
+        display: none; /* Cache le top-info */
+    }
+
+    .topbar {
+        display: flex;
+        justify-content: center; /* Centre le contenu horizontalement */
+    }
+
+    .topbar .top-link {
+        text-align: center; /* Centre le texte à l'intérieur de top-link */
+    }
+}
+
 
 .dropdown .dropdown-menu a:hover {
     background: var(--bs-secondary);

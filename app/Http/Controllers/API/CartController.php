@@ -40,48 +40,42 @@ class CartController extends Controller
         return response()->json(['success' => true, 'message' => 'Produit ajouté au panier.']);
     }
 
-    /**
-     * Mettre à jour un article du panier.
-     */
-    public function updateCart(Request $request, $id)
+    
+
+      public function index(Request $request)
     {
-        $request->validate([
-            'quantity' => 'required|integer|min:1',
+        $user = $request->user();
+        $cartItems = $user->cartItems()->with('product')->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $cartItems
         ]);
+    }
+    public function remove($productId, Request $request)
+    {
+        $user = $request->user();
+        $cartItem = $user->cartItems()->where('product_id', $productId)->first();
 
-        $cartItem = Cart::where('user_id', Auth::id())
-                         ->where('id', $id)
-                         ->firstOrFail();
+        if ($cartItem) {
+            $cartItem->delete();
+            return response()->json(['success' => true]);
+        }
 
-        $cartItem->quantity = $request->quantity;
-        $cartItem->save();
-
-        return response()->json(['success' => true, 'message' => 'Panier mis à jour.']);
+        return response()->json(['success' => false, 'message' => 'Produit non trouvé dans le panier.']);
     }
 
-    /**
-     * Supprimer un article du panier.
-     */
-    public function removeFromCart($id)
+    public function updateQuantity($productId, Request $request)
     {
-        $cartItem = Cart::where('user_id', Auth::id())
-                         ->where('id', $id)
-                         ->firstOrFail();
+        $user = $request->user();
+        $cartItem = $user->cartItems()->where('product_id', $productId)->first();
 
-        $cartItem->delete();
+        if ($cartItem) {
+            $cartItem->quantity = $request->quantity;
+            $cartItem->save();
+            return response()->json(['success' => true]);
+        }
 
-        return response()->json(['success' => true, 'message' => 'Produit supprimé du panier.']);
-    }
-
-    /**
-     * Lister les articles du panier.
-     */
-    public function getCartItems()
-    {
-        $cartItems = Cart::with('product') // Assurez-vous d'avoir une relation 'product' dans le modèle Cart
-                         ->where('user_id', Auth::id())
-                         ->get();
-
-        return response()->json(['success' => true, 'data' => $cartItems]);
+        return response()->json(['success' => false, 'message' => 'Produit non trouvé dans le panier.']);
     }
 }

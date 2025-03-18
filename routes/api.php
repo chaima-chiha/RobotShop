@@ -33,13 +33,13 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
    Route::get('/categories/{id}/products', [CategoryController::class, 'productsByCategory']);
 
 
-   
+
    Route::middleware('auth:sanctum')->group(function () {
  //Route pour le panier
     Route::post('/cart', [CartController::class, 'addToCart']);
-    Route::put('/cart/{id}', [CartController::class, 'updateCart']);
-    Route::delete('/cart/{id}', [CartController::class, 'removeFromCart']);
-    Route::get('/cart', [CartController::class, 'getCartItems']);
+    Route::put('/cart/{id}', [CartController::class, 'updateQuantity']);
+    Route::delete('/cart/{id}', [CartController::class, 'remove']);
+    Route::get('/cart', [CartController::class, 'index']);
 //route pour le profil client
     Route::get('/profile', [ClientController::class, 'profile']);
     Route::get('/orders', [ClientController::class, 'orders']);

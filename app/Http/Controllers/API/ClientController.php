@@ -30,26 +30,32 @@ class ClientController extends Controller
 
     public function updateUserDetails(Request $request)
     {
-    $user = $request->user();
+        $user = $request->user();
 
-    // Valider les données entrantes
-    $validatedData = $request->validate([
+        // Valider les données entrantes
+        $validatedData = $request->validate([
+            'email' => 'sometimes|required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:8|confirmed',
+        ]);
 
-        'email' => 'sometimes|required|email|unique:users,email,' . $user->id,
-        'password' => 'nullable|string|min:8|confirmed',
-    ]);
+        // Mettre à jour les données de l'utilisateur
+        if (isset($validatedData['password'])) {
+            $validatedData['password'] = Hash::make($validatedData['password']);
+        }
 
-    // Mettre à jour les données de l'utilisateur
-    if (isset($validatedData['password'])) {
-        $validatedData['password'] = Hash::make($validatedData['password']);
-    }
+        // Vérifiez si la méthode update retourne true
+        $isUpdated = $user->update($validatedData);
 
-    $user->update($validatedData);
-
-    return response()->json([
-        'user' => $user,
-        'msg' => 'User details updated successfully'
-    ]);
+        if ($isUpdated) {
+            return response()->json([
+                'user' => $user,
+                'msg' => 'User details updated successfully'
+            ]);
+        } else {
+            return response()->json([
+                'msg' => 'Failed to update user details'
+            ], 500);
+        }
     }
 
 }

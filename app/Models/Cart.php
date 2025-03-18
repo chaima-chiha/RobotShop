@@ -22,7 +22,8 @@ class Cart extends Model
 
      // Obtenir le produit associé au panier.
     public function product()
-    {
-        return $this->belongsToMany(Product::class);
-    }
+{
+    return $this->belongsTo(Product::class);
+}
+
 }

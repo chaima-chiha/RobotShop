@@ -7,7 +7,7 @@
 
     <!-- Navbar start -->
     <div class="container-fluid fixed-top">
-        <div class="container topbar bg-primary d-none d-lg-block">
+        <div class="container topbar bg-primary  d-lg-block">
             <div class="d-flex justify-content-between">
                 <div class="top-info ps-2">
 
@@ -24,17 +24,17 @@
         </div>
         <div class="container px-0">
             <nav class="navbar navbar-light bg-white navbar-expand-xl">
-                <a href="index.html" class="navbar-brand"><h1 class="text-primary display-6">RobotShop</h1> <p class="text-secondary mb-0 " >Academy</p></a>
+                <a href="/" class="navbar-brand"><h1 class="text-primary display-6">RobotShop</h1> <p class="text-secondary mb-0 " >Academy</p></a>
                 <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span class="fa fa-bars text-primary"></span>
                 </button>
                 <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                     <div class="navbar-nav mx-auto">
-                        <a href="/products" class="nav-item nav-link active">Acceuil</a>
+                        <a href="/" class="nav-item nav-link active">Acceuil</a>
                         <a href="/products" class="nav-item nav-link active">produits</a>
                          <!-- Menu déroulant pour les catégories -->
                         <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a href="#" class="nav-link dropdown-toggle active" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Catégories
                         </a>
                         <div class="dropdown-menu m-0 bg-secondary rounded-0" aria-labelledby="categoriesDropdown" id="categoriesMenu">
@@ -47,8 +47,9 @@
 
 
                         <a href="shop-detail.html" class="nav-item nav-link active">formations</a>
+                        <!--
                         <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                            <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Pages</a>
                             <div class="dropdown-menu m-0 bg-secondary rounded-0">
                                 <a href="/products" class="dropdown-item">Nos Produits</a>
                                 <a href="chackout.html" class="dropdown-item">Nos Formations</a>
@@ -56,16 +57,20 @@
                                 <a href="404.html" class="dropdown-item">Recommendations</a>
                             </div>
                         </div>
-                        <a href="contact.html" class="nav-item nav-link">Contact</a>
-                        <a href="/profil" class="nav-item nav-link  fas fa-user ">Mon Compte</a>
+                         -->
+                        <a href="/contact" class="nav-item nav-link active">Contact</a>
+
                     </div>
 
                     <div class="d-flex m-3 me-0">
-                        <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>
-                        <a href="#" class="position-relative me-4 my-auto">
+                        <a href="/cart" class="position-relative me-4 my-auto">
                             <i class="fa fa-shopping-bag fa-2x"></i>
-                            <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
+                            <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;"></span>
                         </a>
+                        <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>
+                        <a href="/profil" class="position-relative me-4 my-auto">
+                            <i class="fas fa-user fa-2x"></i>
+                       </a>
 
                     </div>
                 </div>

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserAuthController;
 
 
 Route::get('/', function () { return view('client.home'); });
@@ -19,3 +20,7 @@ Route::get('/categories/{id}/products', function ($id) { return view('products.c
 Route::get('/cart',function(){return view('cart.cart');});
 Route::get('/checkout',function(){return view('cart.checkout');});
 Route::get('/payment', function () {return view('cart.facturation');});
+
+//route de reset mdp
+Route::get('/reset-password', function () {return view('auth.reset-password');});
+

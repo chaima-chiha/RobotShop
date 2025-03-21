@@ -157,7 +157,31 @@
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary">LOGIN</button>
                     </div>
+
                 </form>
+                <div>
+                    <a class="nav-item nav-link active  " href="#" data-bs-toggle="modal" data-bs-target="#forgetpwdModal">mot de passe oublié</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="forgetpwdModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content rounded-0 border-0 p-4">
+            <div class="modal-header border-0">
+                <h3>rénitialiser mot de passe</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                    @csrf
+                    <form id="reset-link-form">
+                        @csrf
+                        <input type="email" name="email" placeholder="Email" required />
+                        <button type="submit">Envoyer le lien de réinitialisation</button>
+                    </form>
 
             </div>
         </div>
@@ -168,4 +192,6 @@
 @include('partials.register')
 <!-- login.js -->
 @include('partials.login')
+
+@include('auth.forgetPassword_js')
 

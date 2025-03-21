@@ -17,8 +17,9 @@ Route::post('/login', [UserAuthController::class, 'login']);
 Route::post('/logout', [UserAuthController::class, 'logout'])->middleware('auth:sanctum');
 
 //forget password
-Route::post('/forgot-password', [UserAuthController::class, 'forgotPassword']);
-Route::post('/reset-password', [UserAuthController::class, 'resetPassword']);
+Route::post('/forgot-password', [UserAuthController::class, 'sendResetLinkEmail']);
+Route::post('/reset-password', [UserAuthController::class, 'reset']);
+
 
 
 //products
@@ -40,6 +41,7 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
     Route::put('/cart/{id}', [CartController::class, 'updateQuantity']);
     Route::delete('/cart/{id}', [CartController::class, 'remove']);
     Route::get('/cart', [CartController::class, 'index']);
+    
 //route pour le profil client
     Route::get('/profile', [ClientController::class, 'profile']);
     Route::get('/orders', [ClientController::class, 'orders']);

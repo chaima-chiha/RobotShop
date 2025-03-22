@@ -9,8 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\ResetPasswordNotification;
 use Spatie\Permission\Traits\HasRoles;
-
-class User extends Authenticatable
+use Filament\Models\Contracts\FilamentUser;
+class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable,HasApiTokens ,HasRoles;
@@ -51,6 +51,11 @@ class User extends Authenticatable
         ];
     }
 
+   public function canAccessPanel(\Filament\Panel $panel): bool
+    {
+        return $this->hasRole('admin');
+    }
+
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPasswordNotification($token));
@@ -65,7 +70,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Cart::class);
     }
-    
+
     public function cartItems()
 {
     return $this->hasMany(Cart::class);

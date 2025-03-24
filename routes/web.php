@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserAuthController;
+use App\Http\Controllers\Api\CommandeControoler;
 
 
 Route::get('/', function () { return view('client.home'); });
@@ -23,4 +24,4 @@ Route::get('/payment', function () {return view('cart.facturation');});
 
 //route de reset mdp
 Route::get('/reset-password', function () {return view('auth.reset-password');});
-
+Route::get('/pdfgen',[CommandeControoler::class,'pdfgen']);

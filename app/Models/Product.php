@@ -19,6 +19,7 @@ class Product extends Model
         'refrence',
         'description',
         'price',
+        'promotion',
         'stock',
         'category_id',
         'image',

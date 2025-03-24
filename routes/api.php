@@ -2,11 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\API\ProductController;
-use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\SearchController;
 
 //user
 //Route::get('/user', function (Request $request) { return $request->user();})->middleware('auth:sanctum');
@@ -26,7 +27,7 @@ Route::post('/reset-password', [UserAuthController::class, 'reset']);
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 
-
+Route::get('/promotion', [ProductController::class, 'indexPromo']);
 
  // Routes pour les catégories
    Route::get('/categories', [CategoryController::class, 'index']);
@@ -41,7 +42,7 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
     Route::put('/cart/{id}', [CartController::class, 'updateQuantity']);
     Route::delete('/cart/{id}', [CartController::class, 'remove']);
     Route::get('/cart', [CartController::class, 'index']);
-    
+
 //route pour le profil client
     Route::get('/profile', [ClientController::class, 'profile']);
     Route::get('/orders', [ClientController::class, 'orders']);
@@ -49,7 +50,7 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
     Route::post('/update-user-details', [ClientController::class, 'updateUserDetails']);
 });
 
-
-
+    Route::get('/search', [SearchController::class, 'search']);
+    Route::get('/recent-products', [ProductController::class, 'indexNew']);
 
 

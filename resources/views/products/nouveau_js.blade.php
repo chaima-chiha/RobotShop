@@ -1,51 +1,35 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const productsContainer = document.getElementById('products');
+        const productsContainer = document.getElementById('products-new');
         const loadingSpinner = document.getElementById('loading');
-        const categoryName = document.getElementById('categoryName');
-       // const categoryDescription = document.getElementById('categoryDescription');
 
-        // Récupérer l'ID de la catégorie depuis l'URL
-        const categoryId = window.location.pathname.split('/')[2];
-
-        // Fonction pour charger les produits de la catégorie
-        function fetchProductsByCategory(categoryId) {
+        // Fonction pour charger les nouveaux produits
+        function fetchNewProducts() {
             loadingSpinner.style.display = 'block';
 
-            axios.get(`/api/categories/${categoryId}/products`)
+            axios.get('/api/recent-products')
                 .then(response => {
                     console.log('Réponse API:', response.data);
 
                     if (response.data.success) {
-                        // Supposons que la catégorie soit le premier élément du tableau
-                        const category = response.data.data[0].category_name;
-
-                        if (!category) {
-                            throw new Error("Aucune catégorie trouvée !");
-                        }
-
-                        categoryName.textContent = `Produits de la catégorie : ${category}`;
-                       // categoryDescription.textContent = category.description;
-
-                        // Supposons que les produits soient aussi dans "data"
-                        displayProducts(response.data.data);
+                        displayNewProducts(response.data.data);
                     } else {
-                        productsContainer.innerHTML = '<p>Erreur lors du chargement.</p>';
+                        productsContainer.innerHTML = '<p>Erreur lors du chargement des nouveaux produits.</p>';
                     }
                 })
                 .catch(error => {
-                    console.error('Erreur lors de la récupération des produits:', error);
-                    productsContainer.innerHTML = '<p>Erreur lors du chargement des produits.</p>';
+                    console.error('Erreur lors de la récupération des nouveaux produits:', error);
+                    productsContainer.innerHTML = '<p>Erreur lors du chargement des nouveaux produits.</p>';
                 })
                 .finally(() => {
                     loadingSpinner.style.display = 'none';
                 });
         }
 
-        // Fonction pour afficher les produits
-        function displayProducts(products) {
+        // Fonction pour afficher les nouveaux produits
+        function displayNewProducts(products) {
             if (products.length === 0) {
-                productsContainer.innerHTML = '<p>Aucun produit trouvé dans cette catégorie.</p>';
+                productsContainer.innerHTML = '<p>Aucun nouveau produit trouvé.</p>';
                 return;
             }
 
@@ -59,13 +43,15 @@
                                     <img src="${product.image ? '/storage/' + product.image : '/images/default.png'}"
                                         class="img-fluid w-100 rounded-top" alt="${product.name}">
                                 </div>
-                                  <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">${product.category_name}</div>
-
+                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">${product.category_name}</div>
+                                <div class="text-white bg-danger px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Nouveau</div>
                                 <h5 class="card-title">${product.name}</h5>
-                               
                                 <p class="card-text"><strong>Prix :</strong> ${product.price} dt</p>
                                 <a href="/products/${product.id}" class="btn btn-primary" style="margin:10px">Voir les détails</a>
-                                <button style="margin-Top:5px;" class="add-to-cart-btn btn border border-secondary rounded-pill text-primary fa fa-shopping-bag me-2" data-product-id="${product.id}">Ajouter au panier</button>
+                                <button style="margin-Top:5px;" class="add-to-cart-btn btn border border-secondary rounded-pill text-primary fa fa-shopping-bag me-2"
+                                        data-product-id="${product.id}">
+                                    Ajouter au panier
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -86,12 +72,12 @@
         function addToCart(productId) {
             const token = localStorage.getItem('token');
 
-            // Vérifier si le jeton est défini
             if (!token) {
                 console.error('Token not found in localStorage');
                 alert('Vous devez être connecté pour ajouter des produits au panier.');
                 return;
             }
+
             axios.post('/api/cart', {
                 product_id: productId,
                 quantity: 1
@@ -113,7 +99,7 @@
             });
         }
 
-        // Charger les produits de la catégorie
-        fetchProductsByCategory(categoryId);
+     
+        fetchNewProducts();
     });
-    </script>
+</script>

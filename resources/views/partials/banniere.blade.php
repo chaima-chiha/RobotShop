@@ -5,10 +5,10 @@
                 <div class="col-md-12 col-lg-7">
                     <h4 class="mb-3 text-secondary">Apprendre la Robotique de zero</h4>
                     <h1 class="mb-5 display-3 text-primary">Meilleurs Produits & Formations</h1>
-                    <div class="position-relative mx-auto">
+                    <!--<div class="position-relative mx-auto">
                         <input class="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill" type="number" placeholder="Search">
                         <button type="submit" class="btn btn-primary border-2 border-secondary py-3 px-4 position-absolute rounded-pill text-white h-100" style="top: 0; right: 25%;">Submit Now</button>
-                    </div>
+                    </div>-->
                 </div>
                 <div class="col-md-12 col-lg-5">
                     <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">

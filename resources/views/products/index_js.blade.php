@@ -38,12 +38,12 @@
                             <img src="${product.image ? '/storage/' + product.image : '/images/default.png'}"
                                 class="img-fluid w-100 rounded-top" alt="${product.name}">
                         </div>
-                                     
+
                         <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">${product.category_name}</div>
                         <h4>${product.name}</h4>
                         <div class="d-flex justify-content-between flex-lg-wrap">
                             <p class="text-dark fs-5 fw-bold mb-0">${product.price} dt</p>
-                            <a href="/products/${product.id}" class="btn btn-primary rounded-pill ">   Voir les détails      </a>
+                            <a href="/products/${product.id}" class="btn btn-primary rounded-pill " style="margin:10px">   Voir les détails      </a>
                             <button class="add-to-cart-btn btn border border-secondary rounded-pill text-primary fa fa-shopping-bag me-2" data-product-id="${product.id}">   Ajouter au panier</button>
                         </div>
                     </div>

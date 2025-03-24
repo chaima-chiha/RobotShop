@@ -13,12 +13,6 @@ class ClientController extends Controller
         return $request->user();
     }
 
-    public function orders(Request $request)
-    {
-        $orders = $request->user()->orders()->get();
-        return response()->json(['orders' => $orders]);
-    }
-
     public function getUserDetails(Request $request)
     {
         $user = $request->user();
@@ -28,34 +22,10 @@ class ClientController extends Controller
         ]);
     }
 
-    public function updateUserDetails(Request $request)
+    public function orders(Request $request)
     {
-        $user = $request->user();
-
-        // Valider les données entrantes
-        $validatedData = $request->validate([
-            'email' => 'sometimes|required|email|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:8|confirmed',
-        ]);
-
-        // Mettre à jour les données de l'utilisateur
-        if (isset($validatedData['password'])) {
-            $validatedData['password'] = Hash::make($validatedData['password']);
-        }
-
-        // Vérifiez si la méthode update retourne true
-        $isUpdated = $user->update($validatedData);
-
-        if ($isUpdated) {
-            return response()->json([
-                'user' => $user,
-                'msg' => 'User details updated successfully'
-            ]);
-        } else {
-            return response()->json([
-                'msg' => 'Failed to update user details'
-            ], 500);
-        }
+        $orders = $request->user()->orders()->get();
+        return response()->json(['orders' => $orders]);
     }
 
 }

@@ -39,6 +39,9 @@ class ProductResource extends Resource
             Forms\Components\TextInput::make('price')
                 ->required()
                 ->numeric(),
+            Forms\Components\TextInput::make('promotion')
+                ->required()
+                ->numeric(),
             Forms\Components\TextInput::make('stock')
                 ->required()
                 ->numeric(),
@@ -69,6 +72,7 @@ class ProductResource extends Resource
             //Tables\Columns\TextColumn::make('description'),
             Tables\Columns\TextColumn::make('category.name'),
             Tables\Columns\TextColumn::make('price'),
+            Tables\Columns\TextColumn::make('promotion'),
             Tables\Columns\TextColumn::make('stock'),
             ImageColumn::make('image')
                     ->label('Image')

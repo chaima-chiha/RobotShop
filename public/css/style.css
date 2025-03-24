@@ -161,6 +161,7 @@
 
 }
 @media (max-width: 1000px) {
+
     .topbar .top-info {
         display: none; /* Cache le top-info */
     }

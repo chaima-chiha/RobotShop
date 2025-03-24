@@ -58,8 +58,7 @@
     </div>
     <div id="loading" style="display: none;">Loading...</div>
     <div class="no-print">
-        <button id="pay-order-btn" class="btn btn-primary">Payer Facture</button>
-        <button id="print-order-btn" class="btn btn-primary">Imprimer Facture</button>
+       <button id="print-order-btn" class="btn btn-primary">Imprimer Facture</button>
     </div>
 </div>
 

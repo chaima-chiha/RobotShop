@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserAuthController;
-use App\Http\Controllers\Api\CommandeControoler;
+
+use App\Http\Controllers\OrderController;
 
 
 Route::get('/', function () { return view('client.home'); });
@@ -19,9 +19,8 @@ Route::get('/products/{id}', function () {return view('products.show');});
 Route::get('/categories/{id}/products', function ($id) { return view('products.categories_show', ['id' => $id]);});
 
 Route::get('/cart',function(){return view('cart.cart');});
-Route::get('/checkout',function(){return view('cart.checkout');});
-Route::get('/payment', function () {return view('cart.facturation');});
 
 //route de reset mdp
 Route::get('/reset-password', function () {return view('auth.reset-password');});
-Route::get('/pdfgen',[CommandeControoler::class,'pdfgen']);
+Route::get('/order-confirmation', function () { return view('cart.order-confirmation');});
+

@@ -34,6 +34,7 @@
                         <h5>Total:</h5>
                         <p id="cart-total">DT0.00</p>
                     </div>
+                    <button id="vider-cart-btn" class="btn btn-primary btn-lg btn-block">vider le panier</button>
                     <button id="validate-order-btn" class="btn btn-primary btn-lg btn-block">passer la commande</button>
                 </div>
             </div>

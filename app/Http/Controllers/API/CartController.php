@@ -40,7 +40,7 @@ class CartController extends Controller
         return response()->json(['success' => true, 'message' => 'Produit ajouté au panier.']);
     }
 
-    
+
 
       public function index(Request $request)
     {
@@ -64,6 +64,26 @@ class CartController extends Controller
 
         return response()->json(['success' => false, 'message' => 'Produit non trouvé dans le panier.']);
     }
+
+
+    public function removeAll(Request $request)
+    {
+        $user = $request->user();
+
+        // Assuming you have a relationship between User and CartItem
+        $cartItems = $user->cartItems();
+
+        // Check if there are any items in the cart
+        if ($cartItems->exists()) {
+            // Delete all cart items
+            $cartItems->delete();
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Aucun produit trouvé dans le panier.']);
+    }
+
+
 
     public function updateQuantity($productId, Request $request)
     {

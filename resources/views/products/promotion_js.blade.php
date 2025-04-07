@@ -85,7 +85,7 @@
         function addToCart(productId) {
             const token = localStorage.getItem('token');
             if (!token) {
-                alert('Veuillez vous connecter pour ajouter des articles au panier.');
+                showModal('Veuillez vous connecter pour ajouter des articles au panier.');
                 return;
             }
 
@@ -97,12 +97,12 @@
             })
             .then(response => {
                 if (response.data.success) {
-                    alert('Produit ajouté au panier!');
+                    showModal('Produit ajouté au panier!');
                 }
             })
             .catch(error => {
                 console.error('Erreur:', error);
-                alert('Erreur lors de l\'ajout au panier');
+                showModal('Erreur lors de l\'ajout au panier');
             });
         }
 

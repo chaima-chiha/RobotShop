@@ -52,23 +52,23 @@
             let productsHTML = '';
             products.forEach(product => {
                 productsHTML += `
-                    <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
+        <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
+            <div class="rounded position-relative fruite-item p-4 border border-secondary rounded-bottom">
                                 <div class="fruite-img">
                                     <img src="${product.image ? '/storage/' + product.image : '/images/default.png'}"
                                         class="img-fluid w-100 rounded-top" alt="${product.name}">
                                 </div>
                                   <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">${product.category_name}</div>
-
+                         <div class="fruite-content">
                                 <h5 class="card-title">${product.name}</h5>
-                               
                                 <p class="card-text"><strong>Prix :</strong> ${product.price} dt</p>
+                            <div class="buttons">
                                 <a href="/products/${product.id}" class="btn btn-primary" style="margin:10px">Voir les détails</a>
-                                <button style="margin-Top:5px;" class="add-to-cart-btn btn border border-secondary rounded-pill text-primary fa fa-shopping-bag me-2" data-product-id="${product.id}">Ajouter au panier</button>
+                               <button style="margin-Top:5px;" class="add-to-cart-btn btn border border-secondary rounded-pill text-primary fa fa-shopping-bag me-2" data-product-id="${product.id}">Ajouter au panier</button>
                             </div>
                         </div>
-                    </div>
+            </div>
+         </div>
                 `;
             });
 
@@ -89,7 +89,7 @@
             // Vérifier si le jeton est défini
             if (!token) {
                 console.error('Token not found in localStorage');
-                alert('Vous devez être connecté pour ajouter des produits au panier.');
+                showModal('Vous devez être connecté pour ajouter des produits au panier.');
                 return;
             }
             axios.post('/api/cart', {
@@ -102,14 +102,14 @@
             })
             .then(response => {
                 if (response.data.success) {
-                    alert('Produit ajouté au panier avec succès!');
+                    showModal('Produit ajouté au panier avec succès!');
                 } else {
-                    alert('Erreur lors de l\'ajout du produit au panier.');
+                    showModal('Erreur lors de l\'ajout du produit au panier.');
                 }
             })
             .catch(error => {
                 console.error('Erreur lors de l\'ajout du produit au panier:', error);
-                alert('Erreur lors de l\'ajout du produit au panier.');
+                showModal('Erreur lors de l\'ajout du produit au panier.');
             });
         }
 

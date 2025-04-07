@@ -24,7 +24,10 @@ class SignupRequest extends FormRequest
         return [
             'name' => ['required', 'regex:/^[a-zA-Z0-9\s]+$/'], // Nom sans caractères spéciaux
             'email' => 'required|email|unique:users,email', // Email valide et unique
-            'password' => 'required|min:6', // Mot de passe min 6 caractères
+          'password' => 'required|min:6|confirmed', // Mot de passe min 6 caractères
+
+            //confirmed vérifie automatiquement que le champ qui a name="password_confirmation"  correspond au mot de passe
+
         ];
     }
 
@@ -38,6 +41,8 @@ class SignupRequest extends FormRequest
             'email.unique' => 'Cet email est déjà utilisé.',
             'password.required' => 'Le mot de passe est obligatoire.',
             'password.min' => 'Le mot de passe doit contenir au moins 6 caractères.',
+            'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
+
         ];
     }
 }

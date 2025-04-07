@@ -20,7 +20,7 @@ document.getElementById('LoginForm').addEventListener('submit', function(e) {
             if (error.response) {
                 const errors = error.response.data.errors;
                 Object.keys(errors).forEach(key => {
-                    console.log(errors[key][0]); // Ajoute ici ton affichage des erreurs
+                    console.log(errors[key][0]); 
                 });
             } else {
                 console.error("Erreur de connexion :", error);

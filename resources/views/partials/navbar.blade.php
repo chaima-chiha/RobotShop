@@ -7,29 +7,27 @@
 
     <!-- Navbar start -->
     <div class="container-fluid fixed-top">
-        <div class="container topbar bg-primary  d-lg-block">
+        <div class="container-fluid topbar bg-success  d-lg-block">
             <div class="d-flex justify-content-between">
                 <div class="top-info ps-2">
-
                     <small class="me-3"><i class="fas fa-solid fa-phone-volume me-2 text-secondary"></i> <a href="#" class="text-white">+216 99 847 516</a></small>
                     <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">RobotShopAcademy@gmail.com</a></small>
                     <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">19 Rue El Jahedh ,Nabeul</a></small>
-
                 </div>
-                <div class="top-link pe-2">
-                    <a class=" text-white p-sm-2 py-2 px-0 d-inline-block  " href="#" data-bs-toggle="modal" data-bs-target="#signupModal"> s'inscrire</a>
-                    <a class=" text-white p-sm-2 py-2 px-0 d-inline-block" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">/ se connecter</a>
-</div>
             </div>
         </div>
+
         <div class="container px-0">
             <nav class="navbar navbar-light bg-white navbar-expand-xl">
-                <a href="/" class="navbar-brand"><h1 class="text-primary display-6">RobotShop</h1> <p class="text-secondary mb-0 " >Academy</p></a>
-                <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                    <span class="fa fa-bars text-primary"></span>
-                </button>
-                <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
-                    <div class="navbar-nav mx-auto">
+                   <!-- Logo -->
+        <a class="navbar-brand" href="#">
+            <img src="{{ asset('img/mylogo.png') }}" alt="logo" class="img-fluid" style="width: 55vw; height: auto;">
+        </a>
+        <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="fa fa-bars text-primary"></span>
+        </button>
+        <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
+                <div class="navbar-nav mx-auto">
                         <a href="/" class="nav-item nav-link active">Acceuil</a>
                         <a href="/products" class="nav-item nav-link active">produits</a>
                          <!-- Menu déroulant pour les catégories -->
@@ -37,41 +35,35 @@
                         <a href="#" class="nav-link dropdown-toggle active" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Catégories
                         </a>
-                        <div class="dropdown-menu m-0 bg-secondary rounded-0" aria-labelledby="categoriesDropdown" id="categoriesMenu">
+                <div class="dropdown-menu m-0 bg-secondary rounded-0" aria-labelledby="categoriesDropdown" id="categoriesMenu">
                             <!-- Les catégories seront injectées ici dynamiquement -->
                             @include('products.categories_js')
                             <span class="dropdown-item">Chargement des catégories...</span>
-                        </div>
-
-                        </div>
-
-
-                        <a href="shop-detail.html" class="nav-item nav-link active">formations</a>
-                        <!--
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Pages</a>
-                            <div class="dropdown-menu m-0 bg-secondary rounded-0">
-                                <a href="/products" class="dropdown-item">Nos Produits</a>
-                                <a href="chackout.html" class="dropdown-item">Nos Formations</a>
-                                <a href="testimonial.html" class="dropdown-item">Contacts</a>
-                                <a href="404.html" class="dropdown-item">Recommendations</a>
-                            </div>
-                        </div>
-                         -->
+                </div>
+                </div>
+                        <a href="/videos" class="nav-item nav-link active">formations</a>
                         <a href="/contact" class="nav-item nav-link active">Contact</a>
-
-                    </div>
+        </div>
 
                     <div class="d-flex m-3 me-0">
                         <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>
-                        
-                        <a href="/cart" class="position-relative me-4 my-auto">
-                            <i class="fa fa-shopping-bag fa-2x"></i>
-                            <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;"></span>
+                        <a href="/cart" class="position-relative me-3 text-success">
+                            <i class="fa fa-shopping-cart fa-2x"></i>
+                            <span class="position-absolute bg-secondary text-dark rounded-circle d-flex align-items-center justify-content-center px-1"
+                                  style="top: -5px; left: 15px; height: 20px; min-width: 20px;">0</span>
                         </a>
-                       <a href="/profil" class="position-relative me-4 my-auto">
+                    <!-- Icône Mon Compte avec Dropdown -->
+                    <a class=" text-success p-sm-2 py-2 px-0 d-inline-block  " href="#" data-bs-toggle="modal" data-bs-target="#signupModal"> s'inscrire</a>
+                    </div>
+                    <div class="nav-item dropdown position-relative me-4 my-auto">
+                        <a href="#" class="nav-link dropdown-toggle text-success" id="accountDropdown" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-user fa-2x"></i>
-                       </a>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" id="auth-menu">
+                            <!-- Le menu est généré dynamiquement -->
+                        </ul>
+                    </div>
+@include('partials.monCompte_js')
 
                     </div>
                 </div>
@@ -137,6 +129,9 @@
         </div>
     </div>
 </div>
+
+<!-- sign up -->
+@include('partials.register')
 <!-- Modal -->
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -170,6 +165,8 @@
         </div>
     </div>
 </div>
+<!-- login.js -->
+@include('partials.login')
 
 <div class="modal fade" id="forgetpwdModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -190,11 +187,5 @@
         </div>
     </div>
 </div>
-
-<!-- sign up -->
-@include('partials.register')
-<!-- login.js -->
-@include('partials.login')
-
 @include('auth.forgetPassword_js')
 

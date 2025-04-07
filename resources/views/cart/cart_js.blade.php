@@ -9,6 +9,7 @@
     const viderCartBtn = document.getElementById('vider-cart-btn');
     const cartTotal = document.getElementById('cart-total');
 
+
     function fetchCartProducts() {
         loadingSpinner.style.display = 'block';
 
@@ -105,15 +106,15 @@
         })
         .then(response => {
             if (response.data.success) {
-                alert('Panier vidé avec succès!');
+                showAlert('Panier vidé avec succès!');
                 fetchCartProducts(); // Refresh the cart display
             } else {
-                alert('Erreur lors de la suppression des produits du panier.');
+                showAlert('Erreur lors de la suppression des produits du panier.');
             }
         })
         .catch(error => {
             console.error('Erreur lors de la suppression des produits:', error);
-            alert('Erreur lors de la suppression des produits.');
+            showAlert('Erreur lors de la suppression des produits.');
         });
     }
 
@@ -134,17 +135,17 @@
         })
         .then(response => {
             if (response.data.success) {
-                alert('Commande passée avec succès!');
+                showAlert('Commande passée avec succès!');
                 const orderId = response.data.order_id;
                  window.location.href = `/order-confirmation?order_id=${orderId}`;
                 viderCart();
             } else {
-                alert('Erreur lors de la validation de la commande.');
+                showAlert('Erreur lors de la validation de la commande.');
             }
         })
         .catch(error => {
             console.error('Erreur lors de la validation de la commande:', error);
-            alert('Erreur lors de la validation de la commande.');
+            showAlert('Erreur lors de la validation de la commande.');
         });
     });
 
@@ -157,21 +158,28 @@
         });
 
         document.querySelectorAll('.btn-minus, .btn-plus').forEach(button => {
-            button.addEventListener('click', function () {
-                const productId = button.getAttribute('data-product-id');
-                const quantityInput = button.closest('.quantity').querySelector('.quantity-input');
-                let quantity = parseInt(quantityInput.value);
+    button.addEventListener('click', function () {
+        const productId = button.getAttribute('data-product-id');
+        const quantityInput = button.closest('.quantity').querySelector('.quantity-input');
+        let quantity = parseInt(quantityInput.value);
 
-                if (button.classList.contains('btn-plus')) {
-                    quantity += 1;
-                } else if (button.classList.contains('btn-minus') && quantity > 1) {
-                    quantity -= 1;
-                }
+        if (button.classList.contains('btn-plus')) {
+            const maxStock = parseInt(button.getAttribute('data-stock'));
+            if (quantity < maxStock) {
+                quantity += 1;
+            } else {
+                showAlert('Stock insuffisant pour ce produit.', 'warning');
+                return;
+            }
+        } else if (button.classList.contains('btn-minus') && quantity > 1) {
+            quantity -= 1;
+        }
 
-                quantityInput.value = quantity;
-                updateCartQuantity(productId, quantity);
-            });
-        });
+        quantityInput.value = quantity;
+        updateCartQuantity(productId, quantity);
+    });
+});
+
     }
 
     function removeFromCart(productId) {
@@ -185,12 +193,12 @@
                 alert('Produit retiré du panier avec succès!');
                 fetchCartProducts();
             } else {
-                alert('Erreur lors de la suppression du produit du panier.');
+                showAlert('Erreur lors de la suppression du produit du panier.');
             }
         })
         .catch(error => {
             console.error('Erreur lors de la suppression du produit du panier:', error);
-            alert('Erreur lors de la suppression du produit du panier.');
+            showAlert('Erreur lors de la suppression du produit du panier.');
         });
     }
 
@@ -204,19 +212,24 @@
             if (response.data.success) {
                 fetchCartProducts();
             } else {
-                alert('Erreur lors de la mise à jour de la quantité du produit.');
+                showAlert('Erreur lors de la mise à jour de la quantité du produit.');
             }
         })
         .catch(error => {
-            console.error('Erreur lors de la mise à jour de la quantité du produit:', error);
-            alert('Erreur lors de la mise à jour de la quantité du produit.');
-        });
+    console.error('Erreur lors de la mise à jour de la quantité du produit:', error);
+    showAlert('Erreur lors de la mise à jour de la quantité du produit.', 'danger');
+});
     }
+
+
+
 
     // Ensure the event listener is added after the function is defined
     viderCartBtn.addEventListener('click', viderCart);
 
     fetchCartProducts();
+
+
 });
 
 </script>

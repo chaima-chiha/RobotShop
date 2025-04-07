@@ -17,7 +17,8 @@ class Video extends Model
         'video_path',
         'thumbnail',
         'duration',
-        'category_id'
+        'category_id',
+        'niveau'
     ];
 
     // Relation avec la catégorie si nécessaire

@@ -8,10 +8,11 @@
     <div id="user-details">
         <p>Loading user details...</p>
     </div>
-    <button id="logout" class="btn btn-secondary">Logout</button>
+
+
 
     @include('client.profile_js')
-   
-
 </div>
 @endsection
+
+

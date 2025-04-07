@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Vérifier si le jeton est défini
         if (!token) {
             console.error('Token not found in localStorage');
-            alert('Vous devez être connecté pour ajouter des produits au panier.');
+            showAlert('Vous devez être connecté pour ajouter des produits au panier.');
             return;
         }
         axios.post('/api/cart', {
@@ -64,16 +64,39 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => {
             if (response.data.success) {
-                alert('Produit ajouté au panier avec succès!');
+                showAlert('Produit ajouté au panier avec succès!');
             } else {
-                alert('Erreur lors de l\'ajout du produit au panier.');
+                showAlert('Erreur lors de l\'ajout du produit au panier.');
             }
         })
         .catch(error => {
             console.error('Erreur lors de l\'ajout du produit au panier:', error);
-            alert('Erreur lors de l\'ajout du produit au panier.');
+            showAlert('Erreur lors de l\'ajout du produit au panier.');
         });
     }
+
+
+function showAlert(message, type = 'success') {
+    const alertContainer = document.getElementById('alert-containerShow');
+    const alertId = 'alert-' + Date.now();
+
+    const alertHTML = `
+        <div id="${alertId}" class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+        </div>
+    `;
+
+    alertContainer.innerHTML = alertHTML;
+
+    setTimeout(() => {
+        const alertEl = document.getElementById(alertId);
+        if (alertEl) {
+            alertEl.classList.remove('show');
+            alertEl.classList.add('fade');
+        }
+    }, 6000);
+}
 
 
     fetchProductDetails(productId);

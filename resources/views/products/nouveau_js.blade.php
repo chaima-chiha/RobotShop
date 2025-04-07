@@ -74,7 +74,7 @@
 
             if (!token) {
                 console.error('Token not found in localStorage');
-                alert('Vous devez être connecté pour ajouter des produits au panier.');
+                showModal('Vous devez être connecté pour ajouter des produits au panier.');
                 return;
             }
 
@@ -88,18 +88,18 @@
             })
             .then(response => {
                 if (response.data.success) {
-                    alert('Produit ajouté au panier avec succès!');
+                    showModal('Produit ajouté au panier avec succès!');
                 } else {
-                    alert('Erreur lors de l\'ajout du produit au panier.');
+                    showModal('Erreur lors de l\'ajout du produit au panier.');
                 }
             })
             .catch(error => {
                 console.error('Erreur lors de l\'ajout du produit au panier:', error);
-                alert('Erreur lors de l\'ajout du produit au panier.');
+                showModal('Erreur lors de l\'ajout du produit au panier.');
             });
         }
 
-     
+
         fetchNewProducts();
     });
 </script>

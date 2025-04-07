@@ -15,6 +15,19 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class OrderController extends Controller
 {
+    public function index()
+    {
+        // Get the authenticated user
+        $user = Auth::user();
+
+        // Retrieve all orders for the authenticated user
+        $orders = Order::with('items.product')
+            ->where('user_id', $user->id)
+            ->get();
+
+        // Return the list of orders as a JSON response
+        return response()->json(['success' => true, 'data' => $orders]);
+    }
 
     public function store(Request $request)
     {
@@ -102,7 +115,18 @@ class OrderController extends Controller
         $pdf = Pdf::loadView('pdf.order', compact('order'));
         return $pdf->download("commande-{$orderId}.pdf");
     }
+    public function printOrder($orderId)
+    {
+        $order = Order::with(['user', 'items.product'])->findOrFail($orderId);
 
+        $pdf = Pdf::loadView('orders.print', compact('order'));
+
+        // Pour télécharger directement:
+        return $pdf->download('commande-'.$order->id.'.pdf');
+
+        // Pour afficher dans le navigateur:
+       // return $pdf->stream('commande-'.$order->id.'.pdf');
+    }
 
 
 }

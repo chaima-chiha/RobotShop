@@ -30,14 +30,23 @@
         <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
 
+        <!-- Include Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+        <link href="https://vjs.zencdn.net/7.11.4/video-js.css" rel="stylesheet" />
+        <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
+
+
+
     </head>
     <body>
 
     @include('partials.navbar')  <!-- Inclure la navbar  -->
 
 
-
-    <div class="container mt-4 app">
+@include('layouts.alertModal')
+    <div class="container-fluid app">
         @yield('content')
     </div>
 

@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Validation\ValidationException;
+use App\Http\Requests\ResetPasswordRequest;
+
 
 class UserAuthController extends Controller
 {
@@ -78,15 +80,8 @@ public function sendResetLinkEmail(Request $request)
 }
 
 
-
-public function reset(Request $request)
+public function reset(ResetPasswordRequest $request)
 {
-    $request->validate([
-        'token' => 'required',
-        'email' => 'required|email',
-        'password' => 'required|min:8|confirmed',
-    ]);
-
     $status = Password::reset(
         $request->only('email', 'password', 'password_confirmation', 'token'),
         function ($user, $password) {

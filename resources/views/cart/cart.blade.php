@@ -3,7 +3,7 @@
 @section('title', 'Accueil')
 
 @section('content')
-
+<div id="alert-container" class="mt-3"></div>
 <div class="container-fluid py-5">
     <div class="container py-5">
         <div id="loading" style="text-align: center;">téléchargement des produits </div>
@@ -22,6 +22,7 @@
                 <tbody id="cart-table-body">
 
                     @include('cart.cart_js')
+                    @include('layouts.alerts_js')
                 </tbody>
             </table>
         </div>

@@ -12,6 +12,7 @@ use Filament\Tables\Table;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Columns\VideoColumn;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Forms\Components\Select;
 
 class VideoResource extends Resource
 {
@@ -36,6 +37,14 @@ class VideoResource extends Resource
                     ->relationship('category', 'name')
                     ->required(),
 
+
+                    Select::make('niveau')
+                        ->options([
+                            '1' => 'Niveau 1',
+                            '2' => 'Niveau 2',
+                            '3' => 'Niveau 3',
+                        ]),
+
                 FileUpload::make('video_path')
                     ->label('Vidéo')
                     ->directory('videos')
@@ -54,7 +63,7 @@ class VideoResource extends Resource
                     ->label('Durée (en secondes)')
                     ->numeric()
                     ->nullable(),
-                    
+
                 Forms\Components\Select::make('products')
                     ->multiple()
                     ->relationship('products', 'name')
@@ -78,6 +87,8 @@ class VideoResource extends Resource
                     ->height(80),
 
                 Tables\Columns\TextColumn::make('category.name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('niveau')
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('duration')

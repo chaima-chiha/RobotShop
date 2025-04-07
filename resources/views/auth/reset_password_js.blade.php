@@ -9,7 +9,7 @@
             token: document.getElementById('token').value,
             email: document.getElementById('email').value,
             password: document.getElementById('password').value,
-            password_confirmation: document.getElementById('passwordconfirmation').value,
+            password_confirmation: document.getElementById('reset_password_confirmation').value,
         };
 
         try {

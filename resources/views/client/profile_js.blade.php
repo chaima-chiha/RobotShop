@@ -23,16 +23,6 @@
 
 
 
-    document.getElementById("logout").addEventListener("click", function() {
-            axios.post('/api/logout', {}, {
-                headers: { Authorization: `Bearer ${token}` }
-            })
-            .then(() => {
-                localStorage.removeItem('token');
-                window.location.href = "/";
-            })
-            .catch(error => console.error(error));
-        });
 
 
 

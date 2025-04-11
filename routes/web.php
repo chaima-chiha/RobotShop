@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminInvoiceController;
 
 
 //page d acceuil
@@ -21,6 +22,7 @@ Route::get('/cart',function(){return view('cart.cart');});
 Route::get('/reset-password', function () {return view('auth.reset-password');});
 //apercu commande apres valdation
 Route::get('/invoice', function () { return view('orders.invoice');});
+Route::get('/invoice/{order_id}', function () { return view('orders.invoice');});
 //confirmer la commande de client
 Route::get('/order-confirmation', function () { return view('cart.order-confirmation');});
 //lister commandes de client
@@ -29,4 +31,10 @@ Route::get('/mes-commandes', function() { return view('orders.myOrders');});
 Route::get('/videos', function(){ return view('videos.index');});
 //regarder video
 Route::get('/videos/{id}',function(){ return view('videos.show');});
+
+//pdf
+Route::get('/admin/invoice/pdf/{order}', [AdminInvoiceController::class, 'downloadPdf'])
+    ->name('invoice.download');
+//imp
+Route::get('/admin/invoice', [AdminInvoiceController::class, 'show'])->name('invoice.print');
 

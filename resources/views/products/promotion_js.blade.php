@@ -1,112 +1,141 @@
+
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const productsContainer = document.getElementById('products-promo-container');
-        const loadingSpinner = document.getElementById('loading');
+document.addEventListener('DOMContentLoaded', function () {
+    const promoProductsContainer = document.getElementById('products-promo');
+    const loadingPromo = document.getElementById('loading');
 
-        function fetchPromoProducts() {
-            loadingSpinner.style.display = 'block';
+    function fetchPromoProducts() {
+        loadingPromo.style.display = 'block';
 
-            axios.get('/api/promotion')
-                .then(response => {
-                    if (response.data.success) {
-                        displayPromoProducts(response.data.data);
-                    } else {
-                        productsContainer.innerHTML = '<p>Aucun produit en promotion pour le moment.</p>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur:', error);
-                    productsContainer.innerHTML = '<p>Erreur lors du chargement des promotions.</p>';
-                })
-                .finally(() => {
-                    loadingSpinner.style.display = 'none';
-                });
+        axios.get('/api/products', {
+            params: { filter: 'promo' }
+        })
+        .then(response => {
+            if (response.data.success) {
+                const promoProducts = response.data.data.slice(0, 4);
+                displayPromoProducts(promoProducts);
+            } else {
+                promoProductsContainer.innerHTML = '<p>Erreur lors du chargement des produits en promotion.</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération des produits en promotion:', error);
+            promoProductsContainer.innerHTML = '<p>Erreur lors du chargement des produits en promotion.</p>';
+        })
+        .finally(() => {
+            loadingPromo.style.display = 'none';
+        });
+    }
+
+    function displayPromoProducts(products) {
+        if (products.length === 0) {
+            promoProductsContainer.innerHTML = '<p>Aucun produit en promotion trouvé.</p>';
+            return;
         }
 
-        function displayPromoProducts(products) {
-            if (products.length === 0) {
-                productsContainer.innerHTML = '<p>Aucun produit en promotion pour le moment.</p>';
-                return;
-            }
+        let productsHTML = '';
+        products.forEach(product => {
+            const isPromoted = product.is_promoted;
+            const originalPrice = `${product.price} dt`;
+            const discountedPrice = (product.price - (product.price * product.promotion / 100)).toFixed(2) + ' dt';
 
-            let productsHTML = '';
-            products.forEach(product => {
-                const newPrice = product.price ? (product.price * (1 - product.promotion/100)).toFixed(2) : product.price;
+            productsHTML += `
+                <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
+                    <div class="card shadow-sm h-100 rounded product-card position-relative">
+                        <img src="${product.image ? '/storage/' + product.image : '/images/default.png'}"
+                            class="card-img-top rounded-top" alt="${product.name}" loading="lazy">
 
-                productsHTML += `
-                    <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body position-relative">
-                                <div class="fruite-img">
-                                    <img src="${product.image ? '/storage/' + product.image : '/images/default.png'}"
-                                        class="img-fluid w-100 rounded-top" alt="${product.name}">
+                        <div>
+                            ${isPromoted ? `<span class="badge badge-promo bg-warning text-dark">Promo-${product.promotion}%</span>` : ''}
+                            ${product.is_new ? `<span class="badge badge-new bg-primary text-dark">Nouveau</span>` : ''}
+                        </div>
+
+                        <div class="card-body d-flex flex-column justify-content-between">
+
+                                <div>
+                                <h5 class="card-title fw-bold">${product.name}</h5>
                                 </div>
-                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
-                                    ${product.category_name}
-                                </div>
-                                <div class="text-white bg-danger px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">
-                                    -${product.promotion}%
-                                </div>
-
-                                <h5 class="card-title mt-3">${product.name}</h5>
-
-                                <div class="d-flex align-items-center mb-2">
-                                    ${product.price ? `
-                                        <span class="text-danger fs-5 fw-bold">${newPrice} dt</span>
-                                        <span class="text-muted text-decoration-line-through ms-2">${product.price} dt</span>
-                                    ` : `
-                                        <span class="text-danger fs-5 fw-bold">${newPrice} dt</span>
-                                    `}
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div class="card-text text-muted mb-2">
+                                    ${isPromoted
+                                        ? `<span class="text-muted text-decoration-line-through">${originalPrice}</span><br>
+                                           <span class="text-success fw-bold">${discountedPrice}</span>`
+                                        : `<span class="text-success fw-bold">${originalPrice}</span>`
+                                    }
                                 </div>
 
-                                <a href="/products/${product.id}" class="btn btn-primary btn-sm" style="margin:5px 0">
-                                    Voir les détails
-                                </a>
-                                <button class="add-to-cart-btn btn btn-sm border border-secondary rounded-pill text-primary"
-                                        data-product-id="${product.id}">
-                                    <i class="fa fa-shopping-bag me-1"></i>Ajouter
-                                </button>
+                                  <div>
+                            ${product.stock > 0
+                    ? `<span class="    m-2">En stock</span>`
+                    : `<span class="   m-2">Épuisé</span>`}
+                    </div>
+                            </div>
+                            <div class="justify-content-between align-items-center mt-auto">
+                                <div class="buttons">
+                                    <a href="/products/${product.id}" class="btn btn-link p-0">
+                                        <i class="fas fa-eye fa-lg text-primary"></i> Voir
+                                    </a>
+                                    <button class="btn btn-buy rounded-pill add-to-cart-btn" data-product-id="${product.id}">
+                                        <i class="fa fa-shopping-bag"></i> Acheter
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                `;
-            });
+                </div>
+            `;
+        });
 
-            productsContainer.innerHTML = productsHTML;
+        promoProductsContainer.innerHTML = productsHTML;
 
-            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const productId = this.getAttribute('data-product-id');
-                    addToCart(productId);
-                });
+        // Ajouter un lien à la fin
+        promoProductsContainer.innerHTML += `
+    <div class="col-12 text-end mt-3">
+        <a href="/products?filter=promo" class="btn btn-outline-success">
+            Voir plus <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+`;
+
+        document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const productId = button.getAttribute('data-product-id');
+                addToCart(productId);
             });
+        });
+    }
+
+    function addToCart(productId) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            showModal('Vous devez être connecté pour ajouter des produits au panier.');
+            return;
         }
 
-        function addToCart(productId) {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                showModal('Veuillez vous connecter pour ajouter des articles au panier.');
-                return;
+        axios.post('/api/cart', {
+            product_id: productId,
+            quantity: 1
+        }, {
+            headers: {
+                'Authorization': `Bearer ${token}`
             }
+        })
+        .then(response => {
+            if (response.data.success) {
+                showModal('Produit ajouté au panier avec succès!');
+            } else {
+                showModal('Erreur lors de l\'ajout du produit au panier.');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors de l\'ajout du produit au panier:', error);
+            showModal('Erreur lors de l\'ajout du produit au panier.');
+        });
+    }
 
-            axios.post('/api/cart', {
-                product_id: productId,
-                quantity: 1
-            }, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            })
-            .then(response => {
-                if (response.data.success) {
-                    showModal('Produit ajouté au panier!');
-                }
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-                showModal('Erreur lors de l\'ajout au panier');
-            });
-        }
-
-
-        fetchPromoProducts();
-    });
-    </script>
+    // Lancer le chargement automatique
+    fetchPromoProducts();
+});
+</script>

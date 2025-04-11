@@ -12,16 +12,30 @@
         .then(response => {
             const orders = response.data.data;
             const ordersTableDiv = document.getElementById('orders-table');
-            ordersTableDiv.innerHTML = '<table class="table"><thead><tr><th>Order ID</th><th>Total</th><th>Actions</th></tr></thead><tbody></tbody></table>';
-
+            ordersTableDiv.innerHTML = `
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>ID Commande</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+`;
             const tbody = ordersTableDiv.querySelector('tbody');
             orders.forEach(order => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${order.id}</td>
-                    <td>${order.total}</td>
-                    <td><button class="btn btn-primary view-order" data-id="${order.id}">Visualiser</button></td>
-                `;
+            const row = document.createElement('tr');
+             row.innerHTML = `
+                <td><span class="badge bg-secondary">#${order.id}</span></td>
+                <td><strong>${order.total} TND</strong></td>
+                <td>
+                    <button class="btn btn-outline-primary btn-sm view-order" data-id="${order.id}">
+                        <i class="fas fa-eye me-1"></i> Voir
+                    </button>
+                </td>
+            `;
                 tbody.appendChild(row);
             });
 

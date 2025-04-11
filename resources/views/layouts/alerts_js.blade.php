@@ -1,7 +1,7 @@
 <script>
 
 
-window.showModal = function (message, type = 'warning') {
+window.showModal = function (message, type = 'info') {
     const modalElement = document.getElementById('alertModal');
     const modalBody = document.getElementById('alertModalMessage');
     const modalHeader = modalElement.querySelector('.modal-header');
@@ -16,7 +16,7 @@ window.showModal = function (message, type = 'warning') {
 
     // Reset header classes
     modalHeader.className = 'modal-header';
-    modalHeader.classList.add(...(headerClasses[type] || headerClasses['warning']).split(' '));
+    modalHeader.classList.add(...(headerClasses[type] || headerClasses['info']).split(' '));
 
     // Set title based on type
     modalTitle.textContent = {

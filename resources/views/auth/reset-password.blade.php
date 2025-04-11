@@ -1,24 +1,35 @@
-
 @extends('layouts.app')
 
-@section('title', 'Accueil')
+@section('title', 'Réinitialisation du mot de passe')
 
 @section('content')
-    <h2>Reset Your Password</h2>
-    <form id="resetForm">
+<div class="container mt-5" style="max-width: 500px;">
+    <div class="card shadow p-4 rounded-4">
+        <h3 class="text-center mb-4">🔐 Réinitialiser le mot de passe</h3>
 
-        <input type="hidden" id="token" value="{{ request()->get('token') }}">
-        <input type="email" id="email" placeholder="Email" required><br><br>
-        <input type="password" id="password" placeholder="New Password" required><br><br>
-        <input type="password" id="reset_password_confirmation" name="password_confirmation" placeholder="Confirm Password" required>
-        <button type="submit">Reset Password</button>
-    </form>
+        <form id="resetForm">
+            <input type="hidden" id="token" value="{{ request()->get('token') }}">
 
-    <div id="message"></div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Adresse email</label>
+                <input type="email" class="form-control" id="email" required placeholder="exemple@mail.com">
+            </div>
 
-   @include('auth.reset_password_js')
+            <div class="mb-3">
+                <label for="password" class="form-label">Nouveau mot de passe</label>
+                <input type="password" class="form-control" id="password" required placeholder="Mot de passe">
+            </div>
 
+            <div class="mb-3">
+                <label for="reset_password_confirmation" class="form-label">Confirmer le mot de passe</label>
+                <input type="password" class="form-control" id="reset_password_confirmation" name="password_confirmation" required placeholder="Confirmez le mot de passe">
+            </div>
 
+            <button type="submit" class="btn btn-success w-100">Réinitialiser</button>
+        </form>
+    </div>
+</div>
 
-
-   @endsection
+@include('auth.reset_password_js')
+@include('partials.loginModal')
+@endsection

@@ -28,18 +28,39 @@ class OrderController extends Controller
         // Return the list of orders as a JSON response
         return response()->json(['success' => true, 'data' => $orders]);
     }
+    public function show($id)
 
+    {
+        $user = Auth::user(); // récupère l'utilisateur connecté
+        $order = Order::with('items.product')->find($id);
+
+        if (!$order) {
+            return response()->json(['success' => false, 'message' => 'Commande introuvable'], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $order
+        ]);
+    }
+
+  
     public function store(Request $request)
     {
         try {
             // Validate the request data
-            $validatedData = $request->validate([
-                'total' => 'required|numeric|min:0',
-                'items' => 'required|array',
-                'items.*.product_id' => 'required|exists:products,id',
-                'items.*.quantity' => 'required|integer|min:1',
-                'items.*.price' => 'required|numeric|min:0',
-            ]);
+            $validatedData =
+            $request->validate([
+            'nom' => 'required|string|max:255',
+            'adresse' => 'required|string|max:255',
+            'telephone' => 'required|string|max:20',
+            'livraison' => 'required|in:domicile,retrait',
+            'total' => 'required|numeric|min:0',
+            'items' => 'required|array|min:1',
+            'items.*.product_id' => 'required|integer|exists:products,id',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.price' => 'required|numeric|min:0'
+        ]);
 
             // Get the authenticated user
             $user = Auth::user();
@@ -50,13 +71,17 @@ class OrderController extends Controller
             // Start a database transaction
             DB::beginTransaction();
 
-            // Create a new order
             $order = new Order();
             $order->user_id = $user->id;
             $order->total = $validatedData['total'];
+            $order->nom = $validatedData['nom'];
+            $order->adresse = $validatedData['adresse'];
+            $order->telephone = $validatedData['telephone'];
+            $order->livraison = $validatedData['livraison'];
             if (!$order->save()) {
                 throw new \Exception('Failed to save order.');
             }
+
 
             // Create order items
             foreach ($validatedData['items'] as $item) {
@@ -65,6 +90,7 @@ class OrderController extends Controller
                     'product_id' => $item['product_id'],
                     'quantity' => $item['quantity'],
                     'price' => $item['price'],
+
                 ]);
                 if (!$orderItem) {
                     throw new \Exception('Failed to create order item.');
@@ -74,7 +100,12 @@ class OrderController extends Controller
             // Commit the transaction
             DB::commit();
 
-            return response()->json(['success' => true, 'order_id' => $order->id]);
+            return response()->json([
+            'success' => true,
+             'order_id' => $order->id,
+            'message' => 'Commande créée avec succès.'
+             ]);
+
         } catch (\Exception $e) {
             // Rollback the transaction in case of error
             DB::rollBack();
@@ -84,48 +115,6 @@ class OrderController extends Controller
 
             return response()->json(['success' => false, 'message' => 'Erreur lors de la création de la commande.'], 500);
         }
-    }
-
-
-
-    public function show($orderId)
-    {
-        $user = Auth::user(); // récupère l'utilisateur connecté
-
-        $order = Order::with('items.product')
-            ->where('id', $orderId)
-            ->where('user_id', $user->id) // vérifie que la commande lui appartient
-            ->first();
-
-        if (!$order) {
-            return response()->json(['success' => false, 'message' => 'Commande introuvable ou accès non autorisé.'], 404);
-        }
-
-        return response()->json(['success' => true, 'data' => $order]);
-    }
-
-    public function downloadPdf($orderId)
-    {
-        $order = Order::with(['items.product', 'user'])->find($orderId);
-
-        if (!$order) {
-            return response()->json(['success' => false, 'message' => 'Commande introuvable.'], 404);
-        }
-
-        $pdf = Pdf::loadView('pdf.order', compact('order'));
-        return $pdf->download("commande-{$orderId}.pdf");
-    }
-    public function printOrder($orderId)
-    {
-        $order = Order::with(['user', 'items.product'])->findOrFail($orderId);
-
-        $pdf = Pdf::loadView('orders.print', compact('order'));
-
-        // Pour télécharger directement:
-        return $pdf->download('commande-'.$order->id.'.pdf');
-
-        // Pour afficher dans le navigateur:
-       // return $pdf->stream('commande-'.$order->id.'.pdf');
     }
 
 

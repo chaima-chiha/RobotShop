@@ -45,4 +45,20 @@ class Video extends Model
         return $this->belongsToMany(Product::class)
                     ->withTimestamps();
     }
+
+     /**
+     * Accesseur pour retourner le libellé du niveau.
+     *
+     * @return string
+     */
+    public function getLevelAttribute()
+    {
+        $levels = [
+            1.00 => 'Débutant',
+            2.00 => 'Intermédiaire',
+            3.00 => 'Avancé',
+        ];
+
+        return $levels[$this->attributes['niveau']] ?? 'Inconnu';
+    }
 }

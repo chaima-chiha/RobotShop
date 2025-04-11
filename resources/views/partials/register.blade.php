@@ -1,4 +1,3 @@
-
 <script>
 document.getElementById('registerForm').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -12,22 +11,26 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
 
     axios.post('/api/signup', formData)
         .then(function (response) {
-            console.log(response.data)
-            // Stockage du token si nécessaire
             localStorage.setItem('token', response.data.result.token);
 
-            // Redirection vers la liste des produits
-            window.location.href = '/profil';
+            // Utilisation de la modale globale pour le message de succès
+            showModal('✅ Inscription réussie ! Redirection en cours...','success');
+
+            // Redirection après 2 secondes
+            setTimeout(() => {
+                window.location.href = '/profil';
+            }, 1000);
         })
         .catch(function (error) {
-            // Gestion des erreurs
-            if (error.response) {
+            if (error.response && error.response.data && error.response.data.errors) {
                 const errors = error.response.data.errors;
-                // Afficher les erreurs à l'utilisateur
-                Object.keys(errors).forEach(key => {
-                    // Ajoutez ici votre logique pour afficher les erreurs
-                    console.log(errors[key][0]);
-                });
+                const firstErrorKey = Object.keys(errors)[0];
+                const firstErrorMessage = errors[firstErrorKey][0];
+
+                // Utilisation de showModal pour afficher la première erreur
+                showModal(`❌ ${firstErrorMessage}`,'danger');
+            } else {
+                showModal('❌ Une erreur est survenue. Veuillez réessayer plus tard.','danger');
             }
         });
 });

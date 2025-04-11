@@ -49,6 +49,28 @@ class Product extends Model
     {
         return $this->belongsToMany(Cart::class);
     }
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+    public function getRemainingStockAttribute()
+{
+    $orderedQty = $this->orderItems()->sum('quantity');
+    return $this->stock - $orderedQty;
+}
+
+public function getCurrentStockAttribute()
+{
+    // Total commandé dans les commandes validées
+    $orderedQty = $this->orderItems()->sum('quantity');
+
+    // Total dans les paniers
+    $inCartQty = $this->carts()->sum('quantity');
+
+    return $this->stock - $orderedQty - $inCartQty;
+}
+
 }
 
 

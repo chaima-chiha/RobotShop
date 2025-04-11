@@ -2,14 +2,22 @@
     document.addEventListener('DOMContentLoaded', function () {
         const videosContainer = document.getElementById('videos-container');
         const loadingSpinner = document.getElementById('loading');
+        const levelFilter = document.getElementById('level-filter');
 
-        function fetchVideos() {
+        function fetchVideos(level = 'all') {
             loadingSpinner.style.display = 'block';
 
             axios.get('/api/videos')
                 .then(response => {
                     if (response.data.success) {
-                        displayVideos(response.data.data);
+                        let videos = response.data.data;
+
+                        // Filtrage par niveau
+                        if (level !== 'all') {
+                            videos = videos.filter(video => video.level === level);
+                        }
+
+                        displayVideos(videos);
                     } else {
                         videosContainer.innerHTML = '<p>Erreur lors du chargement des vidéos.</p>';
                     }
@@ -23,51 +31,99 @@
                 });
         }
 
+        function getLevelBadge(level) {
+            switch (level) {
+                case 'Débutant':
+                    return `<span class="badge bg-success mb-2"><i class="fas fa-seedling me-1"></i>${level}</span>`;
+                case 'Intermédiaire':
+                    return `<span class="badge bg-warning text-dark mb-2"><i class="fas fa-leaf me-1"></i>${level}</span>`;
+                case 'Avancé':
+                    return `<span class="badge bg-danger mb-2"><i class="fas fa-fire me-1"></i>${level}</span>`;
+                default:
+                    return '';
+            }
+        }
+
         function displayVideos(videos) {
             if (videos.length === 0) {
                 videosContainer.innerHTML = '<p>Aucune vidéo trouvée.</p>';
                 return;
             }
 
-          let videosHTML = '';
-videos.forEach(video => {
-    videosHTML += `
-    <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
-        <div class="card video-card shadow-sm h-100">
-            <img src="${video.thumbnail ? '/storage/' + video.thumbnail : '/images/default-thumbnail.png'}"
-                class="card-img-top" alt="${video.title}">
-
-            <div class="card-body d-flex flex-column justify-content-between">
-                <div>
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <h5 class="card-title fw-bold">${video.title}</h5>
-                        <a href="/videos/${video.id}" class="btn btn-link text-decoration-none p-0">
-                            <i class="fas fa-play-circle fa-lg"></i>
-                        </a>
-                    </div>
-                    <p class="card-text text-muted">${video.description}</p>
-                </div>
-
-                <div class="mt-3">
-                    ${video.level ? `<span class="badge bg-success mb-2">${video.level}</span>` : ''}
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">${video.duration || 'Durée inconnue'}</small>
-                        <div class="progress" style="width: 40%; height: 6px;">
-                            <div class="progress-bar bg-info" style="width: ${video.progress || 0}%;"></div>
+            let videosHTML = '';
+            videos.forEach(video => {
+                videosHTML += `
+                <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
+                    <div class="card video-card shadow-sm h-100">
+                        <img src="${video.thumbnail ? '/storage/' + video.thumbnail : '/images/default-thumbnail.png'}"
+                            class="card-img-top" alt="${video.title}">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="card-title fw-bold">${video.title}</h5>
+                                    <a href="#"
+                                       class="btn btn-link text-decoration-none p-0 play-video-btn"
+                                       data-video-url="${video.video_path ? '/storage/' + video.video_path : '/images/default-video_path.mp4'}"
+                                       data-title="${video.title}"
+                                       data-description="${video.description}">
+                                       <i class="fas fa-play-circle fa-lg"></i>
+                                    </a>
+                                </div>
+                                <p class="card-text text-muted">${video.description}</p>
+                            </div>
+                            <div class="mt-3">
+                                ${video.level ? getLevelBadge(video.level) : ''}
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">${video.duration || 'Durée inconnue'}</small>
+                                    <div class="progress" style="width: 40%; height: 6px;">
+                                        <div class="progress-bar bg-info" style="width: ${video.progress || 0}%;"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    `;
-
-
+                `;
             });
 
             videosContainer.innerHTML = videosHTML;
         }
 
+        // Changement du filtre
+        if (levelFilter) {
+            levelFilter.addEventListener('change', function () {
+                fetchVideos(this.value);
+            });
+        }
+
+        // Gestion du clic sur lecture vidéo
+        document.addEventListener('click', function (e) {
+            const playBtn = e.target.closest('.play-video-btn');
+            if (playBtn) {
+                e.preventDefault();
+
+                const videoUrl = playBtn.dataset.videoUrl;
+                const title = playBtn.dataset.title;
+                const description = playBtn.dataset.description;
+
+                document.getElementById('video-player').src = videoUrl;
+                document.getElementById('video-modal-title').textContent = title;
+                document.getElementById('video-modal-description').textContent = description;
+
+                const modal = new bootstrap.Modal(document.getElementById('videoModal'));
+                modal.show();
+            }
+        });
+
+        // Nettoyage du player à la fermeture du modal
+        document.getElementById('videoModal').addEventListener('hidden.bs.modal', function () {
+            const player = document.getElementById('video-player');
+            player.pause();
+            player.currentTime = 0;
+            player.src = '';
+        });
+
+        // Chargement initial
         fetchVideos();
     });
 </script>

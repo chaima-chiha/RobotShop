@@ -1,105 +1,136 @@
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const productsContainer = document.getElementById('products-new');
-        const loadingSpinner = document.getElementById('loading');
+document.addEventListener('DOMContentLoaded', function () {
+    const newProductsContainer = document.getElementById('products-new');
+    const loadingNew = document.getElementById('loading');
 
-        // Fonction pour charger les nouveaux produits
-        function fetchNewProducts() {
-            loadingSpinner.style.display = 'block';
+    function fetchNewProducts() {
+        loadingNew.style.display = 'block';
 
-            axios.get('/api/recent-products')
-                .then(response => {
-                    console.log('Réponse API:', response.data);
+        axios.get('/api/products', {
+            params: { filter: 'new' }
+        })
+        .then(response => {
+            if (response.data.success) {
+                const newProducts = response.data.data.slice(0, 4);
+                displayNewProducts(newProducts);
+            } else {
+                newProductsContainer.innerHTML = '<p>Erreur lors du chargement des produits récents.</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération des produits récents:', error);
+            newProductsContainer.innerHTML = '<p>Erreur lors du chargement des produits récents.</p>';
+        })
+        .finally(() => {
+            loadingNew.style.display = 'none';
+        });
+    }
 
-                    if (response.data.success) {
-                        displayNewProducts(response.data.data);
-                    } else {
-                        productsContainer.innerHTML = '<p>Erreur lors du chargement des nouveaux produits.</p>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la récupération des nouveaux produits:', error);
-                    productsContainer.innerHTML = '<p>Erreur lors du chargement des nouveaux produits.</p>';
-                })
-                .finally(() => {
-                    loadingSpinner.style.display = 'none';
-                });
+    function displayNewProducts(products) {
+        if (products.length === 0) {
+            newProductsContainer.innerHTML = '<p>Aucun produit récent trouvé.</p>';
+            return;
         }
 
-        // Fonction pour afficher les nouveaux produits
-        function displayNewProducts(products) {
-            if (products.length === 0) {
-                productsContainer.innerHTML = '<p>Aucun nouveau produit trouvé.</p>';
-                return;
-            }
+        let productsHTML = '';
+        products.forEach(product => {
+            const isPromoted = product.is_promoted;
+            const originalPrice = `${product.price} dt`;
+            const discountedPrice = (product.price - (product.price * product.promotion / 100)).toFixed(2) + ' dt';
 
-            let productsHTML = '';
-            products.forEach(product => {
-                productsHTML += `
-                    <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="fruite-img">
-                                    <img src="${product.image ? '/storage/' + product.image : '/images/default.png'}"
-                                        class="img-fluid w-100 rounded-top" alt="${product.name}">
+            productsHTML += `
+                <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
+                    <div class="card shadow-sm h-100 rounded product-card position-relative">
+                        <img src="${product.image ? '/storage/' + product.image : '/images/default.png'}"
+                            class="card-img-top rounded-top" alt="${product.name}" loading="lazy">
+
+                        <div>
+                            ${isPromoted ? `<span class="badge badge-promo bg-warning text-dark">Promo-${product.promotion}%</span>` : ''}
+                            ${product.is_new ? `<span class="badge badge-new bg-primary text-dark">Nouveau</span>` : ''}
+                        </div>
+
+                        <div class="card-body d-flex flex-column justify-content-between">
+
+
+                                <h5 class="card-title fw-bold">${product.name}</h5>
+                                 <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div class="card-text text-muted mb-2">
+                                    ${isPromoted
+                                        ? `<span class="text-muted text-decoration-line-through">${originalPrice}</span><br>
+                                           <span class="text-success fw-bold">${discountedPrice}</span>`
+                                        : `<span class="text-success fw-bold">${originalPrice}</span>`
+                                    }
                                 </div>
-                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">${product.category_name}</div>
-                                <div class="text-white bg-danger px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Nouveau</div>
-                                <h5 class="card-title">${product.name}</h5>
-                                <p class="card-text"><strong>Prix :</strong> ${product.price} dt</p>
-                                <a href="/products/${product.id}" class="btn btn-primary" style="margin:10px">Voir les détails</a>
-                                <button style="margin-Top:5px;" class="add-to-cart-btn btn border border-secondary rounded-pill text-primary fa fa-shopping-bag me-2"
-                                        data-product-id="${product.id}">
-                                    Ajouter au panier
-                                </button>
+
+                                  <div>
+                            ${product.stock > 0 ? `<span class="    m-2">En stock</span>`: `<span class="   m-2">Épuisé</span>`}
+                    </div>
+                            </div>
+                            <div class="justify-content-between align-items-center mt-auto">
+                                <div class="buttons">
+                                    <a href="/products/${product.id}" class="btn btn-link p-0">
+                                        <i class="fas fa-eye fa-lg text-primary"></i> Voir
+                                    </a>
+                                    <button class="btn btn-buy rounded-pill add-to-cart-btn" data-product-id="${product.id}">
+                                        <i class="fa fa-shopping-bag"></i> Acheter
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                `;
-            });
+                </div>
+            `;
+        });
 
-            productsContainer.innerHTML = productsHTML;
+        newProductsContainer.innerHTML = productsHTML;
+                  // Ajouter un lien à la fin
+                  newProductsContainer.innerHTML += `
+    <div class="col-12 text-end mt-3">
+        <a href="/products?filter=promo" class="btn btn-outline-success">
+            Voir plus <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+`;
 
-            // Ajouter un gestionnaire d'événements pour chaque bouton
-            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-                button.addEventListener('click', function () {
-                    const productId = button.getAttribute('data-product-id');
-                    addToCart(productId);
-                });
+        document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const productId = button.getAttribute('data-product-id');
+                addToCart(productId);
             });
+        });
+    }
+
+    function addToCart(productId) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            showModal('Vous devez être connecté pour ajouter des produits au panier.');
+            return;
         }
 
-        function addToCart(productId) {
-            const token = localStorage.getItem('token');
-
-            if (!token) {
-                console.error('Token not found in localStorage');
-                showModal('Vous devez être connecté pour ajouter des produits au panier.');
-                return;
+        axios.post('/api/cart', {
+            product_id: productId,
+            quantity: 1
+        }, {
+            headers: {
+                'Authorization': `Bearer ${token}`
             }
-
-            axios.post('/api/cart', {
-                product_id: productId,
-                quantity: 1
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            .then(response => {
-                if (response.data.success) {
-                    showModal('Produit ajouté au panier avec succès!');
-                } else {
-                    showModal('Erreur lors de l\'ajout du produit au panier.');
-                }
-            })
-            .catch(error => {
-                console.error('Erreur lors de l\'ajout du produit au panier:', error);
+        })
+        .then(response => {
+            if (response.data.success) {
+                showModal('Produit ajouté au panier avec succès!');
+            } else {
                 showModal('Erreur lors de l\'ajout du produit au panier.');
-            });
-        }
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors de l\'ajout du produit au panier:', error);
+            showModal('Erreur lors de l\'ajout du produit au panier.');
+        });
+    }
 
-
-        fetchNewProducts();
-    });
+    // Lancer le chargement automatique
+    fetchNewProducts();
+});
 </script>

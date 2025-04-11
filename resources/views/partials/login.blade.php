@@ -1,3 +1,4 @@
+
 <script>
 document.getElementById('LoginForm').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -9,22 +10,31 @@ document.getElementById('LoginForm').addEventListener('submit', function(e) {
 
     axios.post('/api/login', formData)
         .then(function (response) {
-
             // Stockage du token reçu après login
-           localStorage.setItem('token', response.data.result.token);
-            // Redirection après connexion réussie
-           window.location.href = '/profil';
+            localStorage.setItem('token', response.data.result.token);
+
+            // Affichage d'une alerte de succès
+            showModal('✅ Connexion réussie ! Redirection en cours...','success');
+
+            // Redirection après un court délai
+            setTimeout(() => {
+                window.location.href = '/profil';
+            }, 2000);
         })
         .catch(function (error) {
-            // Gestion des erreurs
-            if (error.response) {
+            if (error.response && error.response.data && error.response.data.errors) {
                 const errors = error.response.data.errors;
-                Object.keys(errors).forEach(key => {
-                    console.log(errors[key][0]); 
-                });
+                const firstKey = Object.keys(errors)[0];
+                const firstErrorMessage = errors[firstKey][0];
+
+                // Affichage de la première erreur via showModal
+                showModal(`❌ ${firstErrorMessage}`,'danger');
             } else {
-                console.error("Erreur de connexion :", error);
+                // Erreur inconnue
+                showModal('❌ Une erreur est survenue. Veuillez réessayer.','danger');
             }
         });
 });
+
+
 </script>

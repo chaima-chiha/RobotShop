@@ -54,8 +54,6 @@ Route::get('/promotion', [ProductController::class, 'indexPromo']);
 //order route
     Route::get('/orders/{id}', [OrderController::class, 'show']);
     Route::post('/orders', [OrderController::class, 'store']);
-    Route::get('/orders/{id}/pdf', [OrderController::class, 'downloadPdf']);
-    Route::get('/orders/{order}/print', [OrderController::class, 'printOrder']);
     Route::get('/orders', [OrderController::class, 'index']);
 
 });

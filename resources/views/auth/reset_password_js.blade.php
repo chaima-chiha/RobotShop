@@ -1,4 +1,3 @@
-
 <script>
     const form = document.getElementById('resetForm');
 
@@ -14,10 +13,20 @@
 
         try {
             const response = await axios.post('/api/reset-password', data);
-            document.getElementById('message').innerText = response.data.message;
+
+            // Affichage avec showModal
+            showModal(`✅ ${response.data.message}`,'success');
+
+         // ouvrir le modal de connexion
+         const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            loginModal.show();
+
         } catch (error) {
-            if (error.response) {
-                document.getElementById('message').innerText = error.response.data.message || 'Erreur';
+            if (error.response && error.response.data) {
+                const msg = error.response.data.message || '❌ Une erreur est survenue.';
+                showModal(`❌ ${msg}`,'danger');
+            } else {
+                showModal('❌ Une erreur inattendue s’est produite.','danger');
             }
         }
     });

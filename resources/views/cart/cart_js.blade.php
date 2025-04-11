@@ -51,11 +51,11 @@
                     <th scope="row">
                         <div class="d-flex align-items-center">
                             <img src="${product.image ? '/storage/' + product.image : '/images/default.png'}"
-                                class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="${product.name}">
+                                class="img-fluid me-5 rounded-circle product-image" style="width: 80px; height: 80px;" alt="${product.name}">
                         </div>
                     </th>
                     <td>
-                        <p class="mb-0 mt-4">${product.name}</p>
+                        <p class="mb-0 mt-4 product-name">${product.name}</p>
                     </td>
                     <td>
                         <p class="mb-0 mt-4">${product.price} D</p>
@@ -106,48 +106,48 @@
         })
         .then(response => {
             if (response.data.success) {
-                showAlert('Panier vidé avec succès!');
+                showModal('Panier vidé avec succès!');
                 fetchCartProducts(); // Refresh the cart display
             } else {
-                showAlert('Erreur lors de la suppression des produits du panier.');
+                showModal('Erreur lors de la suppression des produits du panier.');
             }
         })
         .catch(error => {
             console.error('Erreur lors de la suppression des produits:', error);
-            showAlert('Erreur lors de la suppression des produits.');
+            showModal('Erreur lors de la suppression des produits.');
         });
     }
-
+//boutton passer la commande
     validateOrderBtn.addEventListener('click', function () {
-        const total = parseFloat(cartTotal.textContent.replace('Dt', ''));
-        const cartItems = [];
-        document.querySelectorAll('#cart-table-body tr').forEach(row => {
-            const productId = row.querySelector('.remove-from-cart-btn').getAttribute('data-product-id');
-            const quantity = parseInt(row.querySelector('.quantity-input').value);
-            const price = parseFloat(row.querySelector('td:nth-child(3)').textContent.replace(' D', ''));
-            cartItems.push({ product_id: productId, quantity: quantity, price: price });
-        });
+    const cartItems = [];
+    document.querySelectorAll('#cart-table-body tr').forEach(row => {
+        const productId = row.querySelector('.remove-from-cart-btn').getAttribute('data-product-id');
+        const quantity = parseInt(row.querySelector('.quantity-input').value);
+        const price = parseFloat(row.querySelector('td:nth-child(3)').textContent.replace(' D', ''));
 
-        axios.post('/api/orders', { total: total, items: cartItems }, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        })
-        .then(response => {
-            if (response.data.success) {
-                showAlert('Commande passée avec succès!');
-                const orderId = response.data.order_id;
-                 window.location.href = `/order-confirmation?order_id=${orderId}`;
-                viderCart();
-            } else {
-                showAlert('Erreur lors de la validation de la commande.');
-            }
-        })
-        .catch(error => {
-            console.error('Erreur lors de la validation de la commande:', error);
-            showAlert('Erreur lors de la validation de la commande.');
+        const name = row.querySelector('.product-name')?.textContent.trim();
+        const image = row.querySelector('.product-image')?.getAttribute('src');
+
+        cartItems.push({
+            product_id: productId,
+            name: name,
+            image: image,
+            quantity: quantity,
+            price: price
         });
     });
+
+    const total = parseFloat(cartTotal.textContent.replace('Dt', ''));
+
+    // Stocker dans localStorage
+    localStorage.setItem('checkoutCart', JSON.stringify({ items: cartItems, total }));
+
+    // Rediriger vers la page de confirmation
+    window.location.href = '/order-confirmation';
+
+
+});
+
 
     function addEventListeners() {
         document.querySelectorAll('.remove-from-cart-btn').forEach(button => {
@@ -168,7 +168,7 @@
             if (quantity < maxStock) {
                 quantity += 1;
             } else {
-                showAlert('Stock insuffisant pour ce produit.', 'warning');
+                showModal('Stock insuffisant pour ce produit.', 'warning');
                 return;
             }
         } else if (button.classList.contains('btn-minus') && quantity > 1) {
@@ -190,15 +190,15 @@
         })
         .then(response => {
             if (response.data.success) {
-                alert('Produit retiré du panier avec succès!');
+                showModal('Produit retiré du panier avec succès!');
                 fetchCartProducts();
             } else {
-                showAlert('Erreur lors de la suppression du produit du panier.');
+                showModal('Erreur lors de la suppression du produit du panier.');
             }
         })
         .catch(error => {
             console.error('Erreur lors de la suppression du produit du panier:', error);
-            showAlert('Erreur lors de la suppression du produit du panier.');
+            showModal('Erreur lors de la suppression du produit du panier.');
         });
     }
 
@@ -212,12 +212,12 @@
             if (response.data.success) {
                 fetchCartProducts();
             } else {
-                showAlert('Erreur lors de la mise à jour de la quantité du produit.');
+                showModal('Erreur lors de la mise à jour de la quantité du produit.');
             }
         })
         .catch(error => {
     console.error('Erreur lors de la mise à jour de la quantité du produit:', error);
-    showAlert('Erreur lors de la mise à jour de la quantité du produit.', 'danger');
+    showModal('Erreur lors de la mise à jour de la quantité du produit.', 'danger');
 });
     }
 

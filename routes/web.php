@@ -19,6 +19,8 @@ Route::get('/categories/{id}/products', function ($id) { return view('products.c
 Route::get('/cart',function(){return view('cart.cart');});
 //route de reset password
 Route::get('/reset-password', function () {return view('auth.reset-password');});
+//apercu commande apres valdation
+Route::get('/invoice', function () { return view('orders.invoice');});
 //confirmer la commande de client
 Route::get('/order-confirmation', function () { return view('cart.order-confirmation');});
 //lister commandes de client

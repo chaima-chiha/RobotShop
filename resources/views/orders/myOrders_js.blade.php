@@ -18,6 +18,7 @@
                             <th>ID Commande</th>
                             <th>Total</th>
                             <th>Actions</th>
+                             <th>Modification</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -29,22 +30,29 @@
             orders.forEach(order => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-    <td><span class="badge bg-secondary">#${order.id}</span></td>
-    <td><strong>${order.total} TND</strong></td>
-    <td>
-        <button class="btn btn-outline-primary btn-sm view-order" data-id="${order.id}">
-            <i class="fas fa-eye me-1"></i> Voir
-        </button>
-        <span class="badge bg-${getStatusColor(order.status)} ms-2">${order.status}</span>
-    </td>
-`;
+                        <td><span class="badge bg-success">#${order.id}</span></td>
+                        <td><strong>${order.total} TND</strong></td>
+                        <td>
+                            <button class="btn btn-outline-primary btn-sm view-order" data-id="${order.id}">
+                                <i class="fas fa-eye me-1"></i> Voir
+                            </button>
+                            <span class="badge bg-${getStatusColor(order.status)} ms-2">${order.status}</span>
+                        </td>
+                             <td>
+                                    ${order.status === 'en_attente' || order.status === 'annulée'
+                                        ? `<button class="btn btn-light btn-sm edit-order" data-id="${order.id}">
+                                            <i class="fas fa-edit me-1"></i> Modifier
+                                           </button>`
+                                        : `<span class="badge bg-secondary">Non modifiable</span>`}
+                                </td>
+                    `;
 
                 tbody.appendChild(row);
             });
 
             // Écouteurs pour les boutons "Voir"
-            document.querySelectorAll('.view-order').forEach(button => {
-    button.addEventListener('click', function () {
+    document.querySelectorAll('.view-order').forEach(button => {
+        button.addEventListener('click', function () {
         const orderId = this.getAttribute('data-id');
         const modalOrderDetailsDiv = document.getElementById('modal-order-details');
         modalOrderDetailsDiv.innerHTML = '<p class="text-muted text-center">Chargement du bon de commande...</p>';
@@ -115,13 +123,27 @@
                     `;
                 });
 
+
+                                let total = parseFloat(order.total);
+                let fraisLivraison = 0;
+
+                if (order.livraison.toLowerCase() === 'domicile') {
+                    fraisLivraison = 7;
+                    total += fraisLivraison;
+                }
+
+
                 html += `
                     </tbody>
                 </table>
             </div>
 
             <div class="text-end mt-4">
-                <h4 class="text-success">Total : ${order.total} TND</h4>
+                    <h4 class="text-success">Total : ${order.total} TND</h4>
+                    <div class="text-end mt-4">
+                        <p class="mb-1"><strong>Frais de livraison :</strong> ${fraisLivraison.toFixed(2)} TND</p>
+                        <h4 class="text-success">Total : ${total.toFixed(2)} TND</h4>
+                    </div>
             </div>
         </div> <!-- fin de .card-body -->
     </div> <!-- fin de .card -->
@@ -149,7 +171,169 @@
         });
     });
 });
+/****************************/
+function showAlert(type, message) {
+    const placeholder = document.getElementById('modalAlertPlaceholder');
+    placeholder.innerHTML = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+        </div>
+    `;
+}
+    // Modifier commande
+    document.querySelectorAll('.edit-order').forEach(button => {
+                button.addEventListener('click', async function () {
+                    const orderId = this.dataset.id;
+                    const modalContent = document.getElementById('edit-order-content');
+                    modalContent.innerHTML = 'Chargement...';
 
+                    try {
+                        const res = await axios.get(`/api/orders/${orderId}`, {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        const order = res.data.data;
+
+                        let html = `
+                            <form id="edit-order-form">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>Nom</label>
+                                        <input type="text" name="nom" class="form-control" value="${order.nom}" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Adresse</label>
+                                        <input type="text" name="adresse" class="form-control" value="${order.adresse}" required>
+                                    </div>
+                                    <div class="col-md-6 mt-3">
+                                        <label>Téléphone</label>
+                                        <input type="text" name="telephone" class="form-control" value="${order.telephone}" required>
+                                    </div>
+                                    <div class="col-md-6 mt-3">
+                                        <label>Livraison</label>
+                                        <select name="livraison" class="form-select">
+                                            <option value="retrait" ${order.livraison === 'retrait' ? 'selected' : ''}>retrait</option>
+                                            <option value="domicile" ${order.livraison === 'domicile' ? 'selected' : ''}>À domicile</option>
+                                        </select>
+                                    </div>
+                                 <div class="col-md-6 mt-3">
+                                        <label>Statut</label>
+                                        <select name="status" class="form-select">
+                                            <option value="en_attente" ${order.status === 'en_attente' ? 'selected' : ''}>En attente</option>
+                                            <option value="annulée" ${order.status === 'annulée' ? 'selected' : ''}>Annulée</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <hr class="my-4" />
+                                <div id="products-container">
+                        `;
+
+                        order.items.forEach((item, i) => {
+                            html += `
+                                <div class="row mb-2 product-item" data-index="${i}">
+                                    <input type="hidden" name="products[${i}][product_id]" value="${item.product.id}">
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control product-search" value="${item.product.name}"readonly>
+                                        <div class="autocomplete-results list-group mt-1"></div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="number" name="products[${i}][quantity]" class="form-control" value="${item.quantity}">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" name="products[${i}][price]" class="form-control" value="${item.price}"readonly>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-outline-danger remove-product-btn">Supprimer</button>
+                                    </div>
+                                </div>
+                            `;
+                        });
+
+                       html += `</div>
+
+                            </form>`;
+                               //<button type="button" id="add-product-btn" class="btn btn-outline-success mt-3">Ajouter un produit</button>
+
+
+                        modalContent.innerHTML = html;
+                        new bootstrap.Modal(document.getElementById('editOrderModal')).show();
+
+                        let productIndex = order.items.length;
+
+              /*          document.getElementById('add-product-btn').addEventListener('click', () => {
+                           const container = document.getElementById('products-container');
+                           container.insertAdjacentHTML('beforeend', `
+                               <div class="row mb-2 product-item" data-index="${productIndex}">
+                                    <input type="hidden" name="products[${productIndex}][product_id]" value="">
+                                  <div class="col-md-4">
+                                        <input type="text" class="form-control product-search" placeholder="Nom produit">
+                                        <div class="autocomplete-results list-group mt-1"></div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="number" name="products[${productIndex}][quantity]" class="form-control" value="1">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="number" name="products[${productIndex}][price]" class="form-control" value="0.00">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-outline-danger remove-product-btn">Supprimer</button>
+                                    </div>
+                                </div>
+                            `);
+                            productIndex++;
+                        });
+*/
+                        modalContent.addEventListener('click', function (e) {
+                            if (e.target.classList.contains('remove-product-btn')) {
+                                e.target.closest('.product-item').remove();
+                            }
+                        });
+
+
+
+                        document.getElementById('edit-order-form').addEventListener('submit', async function (e) {
+                            e.preventDefault();
+                            const form = e.target;
+                            const formData = new FormData(form);
+                            const data = Object.fromEntries(formData.entries());
+
+                            const products = [];
+                            form.querySelectorAll('.product-item').forEach(el => {
+                                const index = el.dataset.index;
+                                products.push({
+                                    product_id: el.querySelector(`[name="products[${index}][product_id]"]`).value,
+                                    quantity: el.querySelector(`[name="products[${index}][quantity]"]`).value,
+                                    price: el.querySelector(`[name="products[${index}][price]"]`).value,
+                                });
+                            });
+
+                            const payload = {
+                                nom: data.nom,
+                                adresse: data.adresse,
+                                telephone: data.telephone,
+                                livraison: data.livraison,
+                                status: data.status,
+                                products
+                            };
+
+                            try {
+                                await axios.put(`/api/orders/${orderId}`, payload, {
+                                    headers: { 'Authorization': `Bearer ${token}` }
+                                });
+                                showAlert('success','Commande mise à jour avec succès');
+                                setTimeout(() => location.reload(), 6000);
+                            } catch (err) {
+                                console.error(err);
+                                showAlert('danger','Erreur lors de la mise à jour.');
+                            }
+                        });
+
+                    } catch (err) {
+                        modalContent.innerHTML = '<p class="text-danger">Erreur lors du chargement.</p>';
+                    }
+                });
+            });
+/****************************/
 
         })
         .catch(error => {
@@ -161,7 +345,7 @@
 
         function getStatusColor(status) {
     switch (status.toLowerCase()) {
-        case 'en attente':
+        case 'en_attente':
             return 'warning';
         case 'confirmée':
             return 'success';
@@ -169,6 +353,8 @@
             return 'info';
         case 'livrée':
             return 'primary';
+            case 'annulée':
+            return 'danger';
         default:
             return 'dark';
     }

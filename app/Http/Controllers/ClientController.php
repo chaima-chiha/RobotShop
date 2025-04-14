@@ -27,5 +27,24 @@ class ClientController extends Controller
         $orders = $request->user()->orders()->get();
         return response()->json(['orders' => $orders]);
     }
+    public function updateProfile(Request $request)
+    {
+        $request->validate([
+            'nom' => 'required|string|max:255',
+            'adresse' => 'nullable|string|max:255',
+        ]);
+
+        $user = $request->user();
+        $user->name = $request->nom;
+        $user->adresse = $request->adresse;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'user' => $user,
+            'message' => 'Profil mis à jour avec succès.'
+        ]);
+    }
+
 
 }

@@ -121,6 +121,10 @@
     validateOrderBtn.addEventListener('click', function () {
     const cartItems = [];
     document.querySelectorAll('#cart-table-body tr').forEach(row => {
+
+        const removeBtn = row.querySelector('.remove-from-cart-btn');
+        if (!removeBtn) return;
+
         const productId = row.querySelector('.remove-from-cart-btn').getAttribute('data-product-id');
         const quantity = parseInt(row.querySelector('.quantity-input').value);
         const price = parseFloat(row.querySelector('td:nth-child(3)').textContent.replace(' D', ''));
@@ -136,6 +140,11 @@
             price: price
         });
     });
+
+    if (cartItems.length === 0) {
+        showModal('🛒 Votre panier est vide, vous ne pouvez pas passer la commande.');
+        return; // Stoppe l'exécution ici
+    }
 
     const total = parseFloat(cartTotal.textContent.replace('Dt', ''));
 
@@ -192,6 +201,7 @@
             if (response.data.success) {
                 showModal('Produit retiré du panier avec succès!');
                 fetchCartProducts();
+
             } else {
                 showModal('Erreur lors de la suppression du produit du panier.');
             }
@@ -231,5 +241,4 @@
 
 
 });
-
 </script>

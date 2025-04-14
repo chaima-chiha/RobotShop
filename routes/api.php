@@ -50,13 +50,19 @@ Route::get('/promotion', [ProductController::class, 'indexPromo']);
     Route::get('/profile', [ClientController::class, 'profile']);
     Route::get('/orders', [ClientController::class, 'orders']);
     Route::get('/user-details', [ClientController::class, 'getUserDetails']);
-   // Route::post('/update-user-details', [ClientController::class, 'updateUserDetails']);
+   Route::put('/update-profile', [ClientController::class, 'updateProfile']);
 //order route
     Route::get('/orders/{id}', [OrderController::class, 'show']);
     Route::post('/orders', [OrderController::class, 'store']);
     Route::get('/orders', [OrderController::class, 'index']);
 
 });
+
+
+//modification
+Route::middleware('auth:sanctum')->put('/orders/{order}', [OrderController::class, 'update']);
+
+
 Route::get('/videos', [VideoController::class, 'index']);
 Route::get('/videos/{id}', [VideoController::class, 'show']);
 

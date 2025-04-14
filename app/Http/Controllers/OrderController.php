@@ -44,7 +44,7 @@ class OrderController extends Controller
         ]);
     }
 
-  
+
     public function store(Request $request)
     {
         try {
@@ -116,6 +116,50 @@ class OrderController extends Controller
             return response()->json(['success' => false, 'message' => 'Erreur lors de la création de la commande.'], 500);
         }
     }
+
+    public function update(Request $request, Order $order)
+    {
+        $request->validate([
+            'nom' => 'required|string',
+            'adresse' => 'required|string',
+            'telephone' => 'required|string',
+            'livraison' => 'required|string',
+            'status' => 'nullable|in:en_attente,annulée',
+            'products' => 'required|array',
+            'products.*.product_id' => 'required|exists:products,id',
+            'products.*.quantity' => 'required|integer|min:1',
+            'products.*.price' => 'required|numeric|min:0',
+        ]);
+
+        $order->update([
+            'nom' => $request->nom,
+            'adresse' => $request->adresse,
+            'telephone' => $request->telephone,
+            'livraison' => $request->livraison,
+            'status' => $request->status ?? $order->status,
+        ]);
+
+        // Supprimer les anciens items et recréer
+        $order->items()->delete();
+
+        foreach ($request->products as $item) {
+            $order->items()->create([
+                'product_id' => $item['product_id'],
+                'quantity' => $item['quantity'],
+                'price' => $item['price'],
+            ]);
+        }
+
+        // Recalculer le total
+        $total = collect($request->products)->sum(function ($p) {
+            return $p['price'] * $p['quantity'];
+        });
+
+        $order->update(['total' => $total]);
+
+        return response()->json(['success' => true, 'message' => 'Commande mise à jour.']);
+    }
+
 
 
 }

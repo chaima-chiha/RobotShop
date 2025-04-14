@@ -1,31 +1,61 @@
 <script>
-        document.addEventListener('DOMContentLoaded', function() {
-              const token = localStorage.getItem('token');
-            axios.get('/api/profile',{
-                        headers: {
-                            'Authorization': `Bearer ${localStorage.getItem('token')}`
-                        }
-                    })
-                .then(response => {
-                    const userDetails = response.data;
-                    const userDetailsDiv = document.getElementById('user-details');
+    document.addEventListener('DOMContentLoaded', function() {
+        const token = localStorage.getItem('token');
 
-                    userDetailsDiv.innerHTML = `
-                        <p><strong>Name:</strong> ${userDetails.name}</p>
-                        <p><strong>Email:</strong> ${userDetails.email}</p>
-                    `;
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la récupération des détails de l\'utilisateur:', error);
-                    const userDetailsDiv = document.getElementById('user-details');
-                    userDetailsDiv.innerHTML = '<p>Failed to load user details.</p>';
-                });
-
-
-
-
-
-
-
+        // 🔁 Charger les infos utilisateur
+        axios.get('/api/profile', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(response => {
+            const user = response.data;
+            document.getElementById('user-name').textContent = user.name;
+            document.getElementById('user-email').textContent = user.email;
+            document.getElementById('user-address').textContent = user.adresse ?? '';
+            document.getElementById('new-name').value = user.name;
+            document.getElementById('new-address').value = user.adresse ?? '';
+        }).catch(error => {
+            console.error('Erreur chargement utilisateur', error);
         });
-</script>
+
+        // ✏️ Soumettre la modification du nom + adresse
+        document.getElementById('editNameForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newName = document.getElementById('new-name').value;
+            const newAddress = document.getElementById('new-address').value;
+
+            axios.put('/api/update-profile', {
+                nom: newName,
+                adresse: newAddress
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then(res => {
+                const user = res.data.user;
+                document.getElementById('user-name').textContent = user.name;
+                document.getElementById('user-address').textContent = user.adresse;
+
+                showAlert('success', 'Profil mis à jour avec succès.');
+                const modal = bootstrap.Modal.getInstance(document.getElementById('editNameModal'));
+
+            })
+            .catch(err => {
+                console.error(err);
+                showAlert('danger', 'Erreur lors de la mise à jour.');
+            });
+        });
+
+        // 🔔 Affichage d’alertes Bootstrap dans le modal
+        function showAlert(type, message) {
+            const placeholder = document.getElementById('modalAlertPlaceholder');
+            placeholder.innerHTML = `
+                <div class="alert alert-${type} alert-dismissible fade show mt-3" role="alert">
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+                </div>
+            `;
+        }
+    });
+    </script>

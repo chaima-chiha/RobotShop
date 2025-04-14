@@ -10,7 +10,7 @@ use Carbon\Carbon;
 
 class ProductController extends Controller
 {
-   
+
 public function index(Request $request)
 {
     $thirtyDaysAgo = Carbon::now()->subDays(30);
@@ -126,4 +126,7 @@ public function index(Request $request)
         'data' => $promoProducts
     ]);
 }
+
+
+
 }

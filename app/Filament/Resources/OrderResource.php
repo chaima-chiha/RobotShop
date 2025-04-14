@@ -57,7 +57,7 @@ class OrderResource extends Resource
                 Forms\Components\Select::make('status')
                     ->label('Statut de la commande')
                     ->options([
-                        'en attente' => 'En attente',
+                        'en_attente' => 'En_attente',
                         'confirmée' => 'Confirmée',
                         'expédiée' => 'Expédiée',
                         'livrée' => 'Livrée',
@@ -81,7 +81,7 @@ class OrderResource extends Resource
                 Tables\Columns\TextColumn::make('total')->label('Montant total')->money('TND'),
                 Tables\Columns\TextColumn::make('status')->label('Statut')
                     ->colors([
-                        'warning' => 'en attente',
+                        'warning' => 'en_attente',
                         'success' => 'confirmée',
                         'info'    => 'en cours',
                         'primary' => 'livrée',

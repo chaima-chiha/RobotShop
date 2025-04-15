@@ -27,7 +27,7 @@
         font-weight: bold;
     }
 
-/*******products*****/
+/*******products card*****/
 /* Effet hover pour les cartes produits */
 .product-card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -71,7 +71,7 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Amélioration du bouton "Acheter" */
+/*  bouton "Acheter" */
 .btn-buy {
     background-color: #28a745; /* Vert */
     border: none;
@@ -296,7 +296,7 @@
     opacity: 1;
 }
 
-/**Sur grands écrans (≥ 1200px), les sous-menus sont cachés par défaut et apparaissent avec une rotation 3D lors du survol.**/
+/**     Sur grands écrans (≥ 200px), les sous-menus sont cachés par défaut et apparaissent avec une rotation 3D lors du survol.**/
 @media (min-width: 1200px) {
     .navbar .nav-item .dropdown-menu {
         display: block;
@@ -308,15 +308,16 @@
         transition: .5s;
         opacity: 0;
     }
-
 }
+
+/* Cache le top-info dans small screen */
 @media (max-width: 1000px) {
     .topbar .top-info {
-        display: none; /* Cache le top-info */
+        display: none;
     }
 }
 
-/* Sur petits écrans, ne pas désactiver l'affichage du dropdown */
+/* Sur petits écrans, ne pas désactiver l'affichage du dropdown
 @media (max-width: 1199px) {
     .navbar .nav-item .dropdown-menu {
         transform: none !important;
@@ -326,23 +327,24 @@
         box-shadow: none !important;
     }
 }
-/**Disposition harmonieuse des icônes et du compte
+*/
+/* Animation Slide-Fade pour menu mobile */
 @media (max-width: 1199px) {
     .navbar-collapse {
-        padding-top: 15px;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
     }
 
-    .navbar .navbar-nav {
-        text-align: center;
+    .navbar-collapse.show {
+      opacity: 1;
+      transform: translateY(0);
     }
+  }
 
-    .navbar .d-flex {
-        justify-content: center !important;
-        margin-top: 10px;
-    }
-}
 
 /*** Navbar End ***/
+
 /**background de search modal**/
 #searchModal .modal-content {
     background: rgba(255, 255, 255, .8);
@@ -351,7 +353,7 @@
 
 /*** Footer Start ***/
 .footer .footer-item .btn-link {
-    line-height: 35px;
+    line-height: 30px;
     color: rgba(1, 136, 64, 0.829);
     transition: 0.5s;
 }
@@ -361,7 +363,7 @@
 }
 
 .footer .footer-item p.mb-4 {
-    line-height: 35px;
+    line-height: 30px;
 }
 /*** Footer End ***/
 
@@ -382,5 +384,15 @@
     height: 60px;
     object-fit: cover;
     border-radius: 10px;
+}
+
+/*alert modal*/
+.modal-content {
+    border-radius: 1rem;
+}
+
+.modal-body {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 

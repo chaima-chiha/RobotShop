@@ -52,6 +52,23 @@
                 }
             });
         });
+//
+            // Charger automatiquement les infos utilisateur (nom + adresse)
+            const token = localStorage.getItem('token');
+
+            // 🔁 Charger les infos utilisateur dans le formulaire de commande
+            axios.get('/api/profile', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }).then(response => {
+                const user = response.data;
+                document.getElementById('nom').value = user.name ?? '';
+                document.getElementById('adresse').value = user.adresse ?? '';
+                document.getElementById('telephone').value = user.telephone ?? '';
+            }).catch(error => {
+                console.error('Erreur chargement utilisateur (commande)', error);
+            });
 
         // Formulaire
         document.getElementById('order-form').addEventListener('submit', function (e) {

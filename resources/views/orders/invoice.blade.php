@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let html = `
                 <div class="row mb-4">
                     <div class="col-md-6">
-                        <p><strong>Commande #${order.id}</strong></p>
+                        <p><strong>Commande N°${order.id}</strong></p>
                         <p><strong>Client:</strong> ${order.nom}</p>
                         <p><strong>Adresse:</strong> ${order.adresse}</p>
                         <p><strong>Téléphone:</strong> ${order.telephone}</p>
@@ -105,9 +105,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>
 
                 <div class="text-end mt-4">
+                     <p class="mb-1"><strong>Frais de livraison :</strong> ${order.livraison=== 'domicile' ?`= 7`:`= 0`} TND</p>
+
                     <h4 class="text-success">Total : ${order.total} TND</h4>
                 </div>
             `;
+
 
             invoiceContent.innerHTML = html;
         } else {

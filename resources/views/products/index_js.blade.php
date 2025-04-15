@@ -115,7 +115,7 @@ products.forEach(product => {
                 const stock = parseInt(button.getAttribute('data-product-stock'));
 
                     if (stock <= 0) {
-                        showModal('Produit insuffisant ou épuisé.');
+                        showModal('Produit insuffisant ou épuisé.','warning');
                         return;
                     }
                 addToCart(productId);
@@ -145,7 +145,7 @@ products.forEach(product => {
 
         if (!token) {
             console.error('Token not found in localStorage');
-            showModal('Vous devez être connecté pour ajouter des produits au panier.');
+            showModal('Vous devez être connecté pour ajouter des produits au panier.','warning');
             return;
         }
 
@@ -160,7 +160,7 @@ products.forEach(product => {
         .then(response => {
             if (response.data.success) {
                 fetchProducts();
-                showModal('Produit ajouté au panier avec succès!');
+                showModal('Produit ajouté au panier avec succès!','success');
 
                           //  Appel à la fonction pour mettre à jour le compteur du panier
             axios.get('/api/cart', {
@@ -174,7 +174,7 @@ products.forEach(product => {
                 }
             });
             } else {
-                showModal('Erreur lors de l\'ajout du produit au panier.');
+                showModal('Erreur lors de l\'ajout du produit au panier.','danger');
             }
         })
         .catch(error => {

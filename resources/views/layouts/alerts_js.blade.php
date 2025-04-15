@@ -1,36 +1,46 @@
 <script>
-
-
 window.showModal = function (message, type = 'info') {
     const modalElement = document.getElementById('alertModal');
+    const modalHeader = document.getElementById('alertModalHeader');
+    const modalTitle = document.getElementById('alertModalLabel');
+    const modalIcon = document.getElementById('alertModalIcon');
     const modalBody = document.getElementById('alertModalMessage');
-    const modalHeader = modalElement.querySelector('.modal-header');
-    const modalTitle = modalElement.querySelector('.modal-title');
 
-    const headerClasses = {
-        success: 'bg-success text-white',
-        danger: 'bg-danger text-white',
-        warning: 'bg-warning text-dark',
-        info: 'bg-info text-white'
+    const settings = {
+        success: {
+            title: 'Succès',
+            bg: 'bg-success bg-opacity-25',
+            icon: '<i class="fas fa-check-circle text-white"></i>'
+        },
+        danger: {
+            title: 'Erreur',
+            bg: 'bg-danger bg-opacity-25',
+            icon: '<i class="fas fa-times-circle text-white"></i>'
+        },
+        warning: {
+            title: 'Attention',
+            bg: 'bg-warning bg-opacity-25',
+            icon: '<i class="fas fa-exclamation-triangle text-white"></i>'
+        },
+        info: {
+            title: 'Information',
+            bg: 'bg-info bg-opacity-25',
+            icon: '<i class="fas fa-info-circle text-white"></i>'
+        }
     };
 
+    const config = settings[type] || settings['info'];
+
     // Reset header classes
-    modalHeader.className = 'modal-header';
-    modalHeader.classList.add(...(headerClasses[type] || headerClasses['info']).split(' '));
-
-    // Set title based on type
-    modalTitle.textContent = {
-        success: 'Succès',
-        danger: 'Erreur',
-        warning: 'Attention',
-        info: 'Information'
-    }[type] || 'Alerte';
-
+    modalHeader.className = 'modal-header align-items-center ' + config.bg;
+    modalTitle.textContent = config.title;
+    modalIcon.innerHTML = config.icon;
     modalBody.innerHTML = message;
 
     const modalInstance = new bootstrap.Modal(modalElement);
     modalInstance.show();
 };
+
 
 
 //panir count

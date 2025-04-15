@@ -5,7 +5,7 @@
             <div class="row g-4">
                 <div class="col-lg-3">
                     <a  href="/">
-                        <img src="{{ asset('img/mylogo.png') }}" alt="logo" class="img-fluid" style="width: 50 em; height: auto;">
+                        <img src="{{ asset('img/mylogo.png') }}" alt="logo" class="img-fluid" style="width: 30 px; height: auto;">
                     </a>
                 </div>
                 <div class="col-lg-3">
@@ -22,27 +22,17 @@
                         <p>Address: 19 Rue El Jahedh ,Nabeul ,8011</p>
                         <p>RobotShopAcademy@gmail.com</p>
                         <p>Phone: +216 99 847 516</p>
-
                     </div>
                 </div>
             </div>
         </div>
+        <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>RobotShop Academy</a>, Tout Droit Reserver.</span>
+
     </div>
 </div>
 <!-- Footer End -->
 
-<!-- Copyright Start -->
-<div class="container-fluid copyright bg-dark py-4">
 
-        <div class="row">
-            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>RobotShop Academy</a>, Tout Droit Reserver.</span>
-            </div>
-
-        </div>
-
-</div>
-<!-- Copyright End -->
 
 
 

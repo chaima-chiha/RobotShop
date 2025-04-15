@@ -14,6 +14,9 @@
             document.getElementById('user-address').textContent = user.adresse ?? '';
             document.getElementById('new-name').value = user.name;
             document.getElementById('new-address').value = user.adresse ?? '';
+            document.getElementById('user-phone').textContent = user.telephone ?? '';
+            document.getElementById('new-phone').value = user.telephone ?? '';
+
         }).catch(error => {
             console.error('Erreur chargement utilisateur', error);
         });
@@ -23,10 +26,12 @@
             e.preventDefault();
             const newName = document.getElementById('new-name').value;
             const newAddress = document.getElementById('new-address').value;
+            const newPhone = document.getElementById('new-phone').value;
 
             axios.put('/api/update-profile', {
                 nom: newName,
-                adresse: newAddress
+                adresse: newAddress,
+                telephone: newPhone
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -36,6 +41,7 @@
                 const user = res.data.user;
                 document.getElementById('user-name').textContent = user.name;
                 document.getElementById('user-address').textContent = user.adresse;
+                document.getElementById('user-phone').textContent = user.telephone;
 
                 showAlert('success', 'Profil mis à jour avec succès.');
                 const modal = bootstrap.Modal.getInstance(document.getElementById('editNameModal'));

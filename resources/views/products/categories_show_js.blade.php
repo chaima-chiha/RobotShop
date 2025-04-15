@@ -64,28 +64,35 @@ products.forEach(product => {
                 </div>
 
                 <div class="card-body d-flex flex-column justify-content-between">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
+                         <div>
                         <h5 class="card-title fw-bold">${product.name}</h5>
-                        <div class="card-text text-muted mb-2">
-                            ${isPromoted
-                                ? `<span class="text-muted text-decoration-line-through">${originalPrice}</span><br>
-                                   <span class="text-success fw-bold">${discountedPrice}</span>`
-                                : `<span class="text-success fw-bold">${originalPrice}</span>`
-                            }
                         </div>
-                    </div>
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div class="card-text text-muted mb-2">
+                                ${isPromoted
+                                    ? `<span class="text-muted text-decoration-line-through">${originalPrice}</span><br>
+                                    <span class="text-success fw-bold">${discountedPrice}</span>`
+                                    : `<span class="text-success fw-bold">${originalPrice}</span>`
+                                }
+                            </div>
+                            <div>
+                                    ${product.available_stock > 0
+                            ? `<span class="    m-2">En stock</span>`
+                            : `<span class="   m-2">Épuisé</span>`}
+                            </div>
 
-                    <div class="card-text text-muted mb-2">
-                        <p>${product.category_name}</p>
-                    </div>
+                        </div>
 
                     <div class="justify-content-between align-items-center mt-auto">
                         <div class="buttons">
                             <a href="/products/${product.id}" class="btn btn-link p-0">
                                 <i class="fas fa-eye fa-lg text-primary"></i> Voir
                             </a>
-                            <button class="btn btn-buy rounded-pill add-to-cart-btn" data-product-id="${product.id}">
-                                <i class="fa fa-shopping-bag"></i> Acheter
+                              <button
+                            class="btn btn-buy rounded-pill add-to-cart-btn"
+                            data-product-id="${product.id}"
+                            data-product-stock="${product.available_stock}">
+                            <i class="fa fa-shopping-bag"></i> Acheter
                             </button>
                         </div>
                     </div>
@@ -102,6 +109,13 @@ products.forEach(product => {
         document.querySelectorAll('.add-to-cart-btn').forEach(button => {
             button.addEventListener('click', function () {
                 const productId = button.getAttribute('data-product-id');
+                const stock = parseInt(button.getAttribute('data-product-stock'));
+
+                if (stock <= 0) {
+                    showModal('Produit insuffisant ou épuisé.');
+                    return;
+                }
+
                 addToCart(productId);
             });
         });
@@ -133,6 +147,18 @@ products.forEach(product => {
         .then(response => {
             if (response.data.success) {
                 showModal('Produit ajouté au panier avec succès!');
+
+                          // 🔥 Appel à la fonction pour mettre à jour le compteur du panier
+            axios.get('/api/cart', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(res => {
+                if (res.data.success) {
+                    updateCartCount(res.data.data);
+                }
+            });
             } else {
                 showModal('Erreur lors de l\'ajout du produit au panier.');
             }

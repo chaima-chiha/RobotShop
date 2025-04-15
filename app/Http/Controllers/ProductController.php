@@ -58,9 +58,7 @@ public function index(Request $request)
 
         // Marquer les produits en promotion
         $product->is_promoted = $product->promotion > 0;
-       $product->remaining_stock = $product->remaining_stock; // expose le stock restant
-       // $product->current_stock = $product->current_stock;
-
+     
         unset($product->category);
     });
 

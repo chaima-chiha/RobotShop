@@ -25,6 +25,17 @@ class Product extends Model
         'image',
     ];
 
+    protected $appends = ['available_stock',];
+
+
+
+public function getAvailableStockAttribute()
+{
+    $ordered = $this->orderItems()->sum('quantity');
+    $cart = $this->cart()->sum('quantity');
+    return max(0, $this->stock - $ordered - $cart);
+}
+
     // Relation avec la catégorie
     public function category()
     {
@@ -47,29 +58,15 @@ class Product extends Model
     //relation avec le panier
     public function cart()
     {
-        return $this->belongsToMany(Cart::class);
+        return $this->hasMany(Cart::class);
     }
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
     }
 
-    public function getRemainingStockAttribute()
-{
-    $orderedQty = $this->orderItems()->sum('quantity');
-    return $this->stock - $orderedQty;
-}
 
-public function getCurrentStockAttribute()
-{
-    // Total commandé dans les commandes validées
-    $orderedQty = $this->orderItems()->sum('quantity');
 
-    // Total dans les paniers
-    $inCartQty = $this->carts()->sum('quantity');
-
-    return $this->stock - $orderedQty - $inCartQty;
-}
 
 }
 

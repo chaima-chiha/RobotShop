@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('videos', function (Blueprint $table) {
-            $table->decimal('niveau', 5, 2)->nullable(); 
+            $table->string('niveau')->nullable();
+
        });
     }
 

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class VideoController extends Controller
 {
-    public function index()
+   /* public function index()
     {
         $videos = Video::with('category')->get();
 
@@ -20,6 +20,27 @@ class VideoController extends Controller
     {
         $video = Video::findOrFail($id);
         return response()->json(['success' => true, 'data' => $video]);
+    }*/
+
+
+    public function index(Request $request)
+    {
+        $niveau = $request->query('niveau');
+
+        $query = Video::with('category');
+
+        if ($niveau && in_array($niveau, ['Débutant', 'Intermédiaire', 'Avancé'])) {
+            $query->where('niveau', $niveau);
+        }
+
+        $videos = $query->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $videos
+        ]);
     }
-    
+
+
+
 }

@@ -33,4 +33,35 @@ window.showModal = function (message, type = 'info') {
 };
 
 
+//panir count
+
+
+// Fonction globale à placer en haut ou en dehors du DOMContentLoaded
+function updateCartCount(products) {
+    const cartCount = document.getElementById('cart-count');
+    const totalCount = products.reduce((sum, item) => sum + item.quantity, 0);
+    cartCount.textContent = totalCount;
+
+    // Optionnel : cacher le badge si 0
+    cartCount.style.display = totalCount > 0 ? 'flex' : 'none';
+}
+
+// Appel dans DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function () {
+    axios.get('/api/cart', {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+    .then(response => {
+        if (response.data.success) {
+            updateCartCount(response.data.data); // ✅ Appel ici
+        }
+    })
+    .catch(error => {
+        console.error('Erreur lors de la récupération du compteur du panier:', error);
+    });
+});
+
+
 </script>

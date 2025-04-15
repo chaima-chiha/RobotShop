@@ -76,8 +76,10 @@ products.forEach(product => {
                             : `<span class="text-success fw-bold">${originalPrice}</span>`
                         }
                     </div>
-                    <div> ${product.remaining_stock }
-                            ${product.remaining_stock > 0
+
+                    <div> ${product.available_stock}</div>
+                    <div>
+                            ${product.available_stock > 0
                     ? `<span class="    m-2">En stock</span>`
                     : `<span class="   m-2">Épuisé</span>`}
                     </div>
@@ -91,7 +93,7 @@ products.forEach(product => {
                       <button
                             class="btn btn-buy rounded-pill add-to-cart-btn"
                             data-product-id="${product.id}"
-                            data-product-stock="${product.remaining_stock}">
+                            data-product-stock="${product.available_stock}">
                             <i class="fa fa-shopping-bag"></i> Acheter
                         </button>
 
@@ -117,9 +119,26 @@ products.forEach(product => {
                         return;
                     }
                 addToCart(productId);
+
             });
         });
     }
+
+
+
+       // Quand l'utilisateur change le filtre via le dropdown
+       filterDropdown.addEventListener('change', function () {
+        const selectedFilter = filterDropdown.value;
+
+        // Met à jour l'URL sans recharger la page
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.set('filter', selectedFilter);
+        window.history.pushState({}, '', newUrl);
+
+        // Recharge les produits avec le nouveau filtre
+        fetchProducts(selectedFilter);
+    });
+
 
     function addToCart(productId) {
         const token = localStorage.getItem('token');
@@ -140,7 +159,20 @@ products.forEach(product => {
         })
         .then(response => {
             if (response.data.success) {
+                fetchProducts();
                 showModal('Produit ajouté au panier avec succès!');
+
+                          //  Appel à la fonction pour mettre à jour le compteur du panier
+            axios.get('/api/cart', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(res => {
+                if (res.data.success) {
+                    updateCartCount(res.data.data);
+                }
+            });
             } else {
                 showModal('Erreur lors de l\'ajout du produit au panier.');
             }
@@ -154,18 +186,7 @@ products.forEach(product => {
 
 
 
-    // Quand l'utilisateur change le filtre via le dropdown
-    filterDropdown.addEventListener('change', function () {
-        const selectedFilter = filterDropdown.value;
 
-        // Met à jour l'URL sans recharger la page
-        const newUrl = new URL(window.location);
-        newUrl.searchParams.set('filter', selectedFilter);
-        window.history.pushState({}, '', newUrl);
-
-        // Recharge les produits avec le nouveau filtre
-        fetchProducts(selectedFilter);
-    });
 });
 
 

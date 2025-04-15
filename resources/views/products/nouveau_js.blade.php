@@ -63,20 +63,28 @@ document.addEventListener('DOMContentLoaded', function () {
                                     }
                                 </div>
 
-                                  <div>
-                            ${product.stock > 0 ? `<span class="    m-2">En stock</span>`: `<span class="   m-2">Épuisé</span>`}
+                                       <div> ${product.available_stock}</div>
+                    <div>
+                            ${product.available_stock > 0
+                    ? `<span class="    m-2">En stock</span>`
+                    : `<span class="   m-2">Épuisé</span>`}
                     </div>
-                            </div>
-                            <div class="justify-content-between align-items-center mt-auto">
-                                <div class="buttons">
-                                    <a href="/products/${product.id}" class="btn btn-link p-0">
-                                        <i class="fas fa-eye fa-lg text-primary"></i> Voir
-                                    </a>
-                                    <button class="btn btn-buy rounded-pill add-to-cart-btn" data-product-id="${product.id}">
-                                        <i class="fa fa-shopping-bag"></i> Acheter
-                                    </button>
-                                </div>
-                            </div>
+
+            </div>
+            <div class="justify-content-between align-items-center mt-auto">
+                    <div class="buttons">
+                        <a href="/products/${product.id}" class="btn btn-link p-0">
+                            <i class="fas fa-eye fa-lg text-primary"></i> Voir
+                        </a>
+                      <button
+                            class="btn btn-buy rounded-pill add-to-cart-btn"
+                            data-product-id="${product.id}"
+                            data-product-stock="${product.available_stock}">
+                            <i class="fa fa-shopping-bag"></i> Acheter
+                        </button>
+
+                    </div>
+            </div>
                         </div>
                     </div>
                 </div>
@@ -96,6 +104,12 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.add-to-cart-btn').forEach(button => {
             button.addEventListener('click', function () {
                 const productId = button.getAttribute('data-product-id');
+                const stock = parseInt(button.getAttribute('data-product-stock'));
+
+                    if (stock <= 0) {
+                        showModal('Produit insuffisant ou épuisé.');
+                        return;
+                    }
                 addToCart(productId);
             });
         });
@@ -119,7 +133,20 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => {
             if (response.data.success) {
+                fetchNewProducts();
                 showModal('Produit ajouté au panier avec succès!');
+
+                          // 🔥 Appel à la fonction pour mettre à jour le compteur du panier
+            axios.get('/api/cart', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(res => {
+                if (res.data.success) {
+                    updateCartCount(res.data.data);
+                }
+            });
             } else {
                 showModal('Erreur lors de l\'ajout du produit au panier.');
             }

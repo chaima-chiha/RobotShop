@@ -40,9 +40,9 @@ class VideoResource extends Resource
 
                     Select::make('niveau')
                         ->options([
-                            '1' => 'Niveau 1',
-                            '2' => 'Niveau 2',
-                            '3' => 'Niveau 3',
+                            'Débutant' => 'Débutant',
+                            'Intermédiaire' => 'Intermédiaire',
+                            'Avancé' => 'Avancé',
                         ]),
 
                 FileUpload::make('video_path')

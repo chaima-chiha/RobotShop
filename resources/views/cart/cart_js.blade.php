@@ -1,6 +1,4 @@
 
-
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
     const cartTableBody = document.getElementById('cart-table-body');
@@ -21,6 +19,7 @@
         .then(response => {
             if (response.data.success) {
                 displayCartProducts(response.data.data);
+
             } else {
                 cartTableBody.innerHTML = '<tr><td colspan="6">Erreur lors du chargement du panier.</td></tr>';
             }
@@ -37,9 +36,10 @@
     function displayCartProducts(products) {
         if (products.length === 0) {
             cartTableBody.innerHTML = '<tr><td colspan="6">Votre panier est vide.</td></tr>';
+            updateCartCount(products);
+
             return;
         }
-
         let cartProductsHTML = '';
         let subtotal = 0;
         products.forEach(cartItem => {
@@ -61,7 +61,7 @@
                         <p class="mb-0 mt-4">${product.price} D</p>
                     </td>
                     <td>
-                        <div class="input-group quantity mt-4" style="width: 100px;">
+                        <div class="input-group quantity mt-4" style="width: 110px;">
                             <div class="input-group-btn">
                                 <button class="btn btn-sm btn-minus rounded-circle bg-light border" data-product-id="${product.id}">
                                     <i class="fa fa-minus"></i>
@@ -69,7 +69,7 @@
                             </div>
                             <input type="text" class="form-control form-control-sm text-center border-0 quantity-input" value="${cartItem.quantity}" readonly>
                             <div class="input-group-btn">
-                                <button class="btn btn-sm btn-plus rounded-circle bg-light border" data-product-id="${product.id}">
+                                <button class="btn btn-sm btn-plus rounded-circle bg-light border" data-product-id="${product.id}"  data-stock="${product.available_stock}">
                                     <i class="fa fa-plus"></i>
                                 </button>
                             </div>
@@ -86,9 +86,9 @@
                 </tr>
             `;
         });
-
         cartTableBody.innerHTML = cartProductsHTML;
         updateCartTotals(subtotal);
+        updateCartCount(products);
 
         // Add event listeners for the remove and quantity buttons
         addEventListeners();
@@ -97,6 +97,9 @@
     function updateCartTotals(total) {
         cartTotal.textContent = `${total.toFixed(2)}Dt`;
     }
+
+
+
 
     function viderCart() {
         axios.delete('/api/cart', {
@@ -117,11 +120,12 @@
             showModal('Erreur lors de la suppression des produits.');
         });
     }
+
 //boutton passer la commande
     validateOrderBtn.addEventListener('click', function () {
     const cartItems = [];
     document.querySelectorAll('#cart-table-body tr').forEach(row => {
-
+            //pour pouvoir passer au modal de votre panier vide avant la commande
         const removeBtn = row.querySelector('.remove-from-cart-btn');
         if (!removeBtn) return;
 
@@ -199,7 +203,7 @@
         })
         .then(response => {
             if (response.data.success) {
-                showModal('Produit retiré du panier avec succès!');
+
                 fetchCartProducts();
 
             } else {
@@ -231,11 +235,9 @@
 });
     }
 
-
-
-
     // Ensure the event listener is added after the function is defined
     viderCartBtn.addEventListener('click', viderCart);
+
 
     fetchCartProducts();
 

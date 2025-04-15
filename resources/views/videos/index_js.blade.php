@@ -4,45 +4,46 @@
         const loadingSpinner = document.getElementById('loading');
         const levelFilter = document.getElementById('level-filter');
 
-        function fetchVideos(level = 'all') {
-            loadingSpinner.style.display = 'block';
 
-            axios.get('/api/videos')
-                .then(response => {
-                    if (response.data.success) {
-                        let videos = response.data.data;
+        function fetchVideos(niveau = 'all') {
+    loadingSpinner.style.display = 'block';
 
-                        // Filtrage par niveau
-                        if (level !== 'all') {
-                            videos = videos.filter(video => video.level === level);
-                        }
+    let url = '/api/videos';
+    if (niveau !== 'all') {
+        url += `?niveau=${encodeURIComponent(niveau)}`;
+    }
 
-                        displayVideos(videos);
-                    } else {
-                        videosContainer.innerHTML = '<p>Erreur lors du chargement des vidéos.</p>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la récupération des vidéos:', error);
-                    videosContainer.innerHTML = '<p>Erreur lors du chargement des vidéos.</p>';
-                })
-                .finally(() => {
-                    loadingSpinner.style.display = 'none';
-                });
-        }
-
-        function getLevelBadge(level) {
-            switch (level) {
-                case 'Débutant':
-                    return `<span class="badge bg-success mb-2"><i class="fas fa-seedling me-1"></i>${level}</span>`;
-                case 'Intermédiaire':
-                    return `<span class="badge bg-warning text-dark mb-2"><i class="fas fa-leaf me-1"></i>${level}</span>`;
-                case 'Avancé':
-                    return `<span class="badge bg-danger mb-2"><i class="fas fa-fire me-1"></i>${level}</span>`;
-                default:
-                    return '';
+    axios.get(url)
+        .then(response => {
+            if (response.data.success) {
+                const videos = response.data.data;
+                displayVideos(videos);
+            } else {
+                videosContainer.innerHTML = '<p>Erreur lors du chargement des vidéos.</p>';
             }
-        }
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération des vidéos:', error);
+            videosContainer.innerHTML = '<p>Erreur lors du chargement des vidéos.</p>';
+        })
+        .finally(() => {
+            loadingSpinner.style.display = 'none';
+        });
+}
+
+function getLevelBadge(niveau) {
+    switch (niveau) {
+        case 'Débutant':
+            return `<span class="badge bg-success mb-2"><i class="fas fa-seedling me-1"></i>${niveau}</span>`;
+        case 'Intermédiaire':
+            return `<span class="badge bg-warning text-dark mb-2"><i class="fas fa-leaf me-1"></i>${niveau}</span>`;
+        case 'Avancé':
+            return `<span class="badge bg-danger mb-2"><i class="fas fa-fire me-1"></i>${niveau}</span>`;
+        default:
+            return '';
+    }
+}
+
 
         function displayVideos(videos) {
             if (videos.length === 0) {
@@ -65,7 +66,7 @@
                                        class="btn btn-link text-decoration-none p-0 play-video-btn"
                                        data-video-url="${video.video_path ? '/storage/' + video.video_path : '/images/default-video_path.mp4'}"
                                        data-title="${video.title}"
-                                       data-description="${video.description}">
+                                       data-description="${video.description}">play
                                        <i class="fas fa-play-circle fa-lg"></i>
                                     </a>
                                 </div>

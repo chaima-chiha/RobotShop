@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         let productsHTML = '';
-products.forEach(product => {
+    products.forEach(product => {
     const isPromoted = product.is_promoted;
     const originalPrice = `${product.price} dt`;
     const discountedPrice = (product.price - (product.price * product.promotion / 100)).toFixed(2) + ' dt';

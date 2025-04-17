@@ -3,22 +3,30 @@
 @section('content')
 
 <div class="container py-5">
-    <h1 class="text-center">Liste des Vidéos</h1>
-    <div id="loading" style="text-align: center;">Chargement des vidéos...</div>
-    <div class="mb-4">
-        <label for="level-filter" class="form-label">Filtrer par niveau :</label>
-        <select id="level-filter" class="form-select">
-            <option value="all">Tous les niveaux</option>
-            <option value="Débutant">Débutant</option>
-            <option value="Intermédiaire">Intermédiaire</option>
-            <option value="Avancé">Avancé</option>
-        </select>
+    <div class="row align-items-center mb-4">
+        <div class="col-md-6 text-md-start text-center mb-3 mb-md-0">
+            <h1 class="fw-bold">Nos Vidéos</h1>
+        </div>
+        <div class="col-md-6 text-md-end text-center">
+            <label for="level-filter" class="form-label me-2">Filtrer par niveau :</label>
+            <select id="level-filter" class="form-select d-inline-block w-auto">
+                <option value="all">Tous les niveaux</option>
+                <option value="Débutant">Débutant</option>
+                <option value="Intermédiaire">Intermédiaire</option>
+                <option value="Avancé">Avancé</option>
+            </select>
+        </div>
     </div>
 
-
+    <div id="loading" class="text-center mb-4" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Chargement...</span>
+        </div>
+    </div>
 
     <div id="videos-container" class="row g-4"></div>
 </div>
+
 
 
     @include('videos.index_js')

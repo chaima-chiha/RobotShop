@@ -44,51 +44,82 @@ function getLevelBadge(niveau) {
     }
 }
 
+function displayVideos(videos) {
+    if (videos.length === 0) {
+        videosContainer.innerHTML = '<p>Aucune vidéo trouvée.</p>';
+        return;
+    }
 
-        function displayVideos(videos) {
-            if (videos.length === 0) {
-                videosContainer.innerHTML = '<p>Aucune vidéo trouvée.</p>';
-                return;
-            }
+    let videosHTML = '';
+videos.forEach(video => {
+    let filesHtml = '';
+/*
+    if (video.files && video.files.length > 0) {
+        filesHtml += `
+        <div class="video-files">
+            <h6>Fichiers associés :</h6>
+            <ul>
+            `;
 
-            let videosHTML = '';
-            videos.forEach(video => {
-                videosHTML += `
-                <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
-                    <div class="card video-card shadow-sm h-100">
-                        <img src="${video.thumbnail ? '/storage/' + video.thumbnail : '/images/default-thumbnail.png'}"
-                            class="card-img-top" alt="${video.title}">
-                        <div class="card-body d-flex flex-column justify-content-between">
-                            <div>
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h5 class="card-title fw-bold">${video.title}</h5>
-                                    <a href="#"
-                                       class="btn btn-link text-decoration-none p-0 play-video-btn"
-                                       data-video-url="${video.video_path ? '/storage/' + video.video_path : '/images/default-video_path.mp4'}"
-                                       data-title="${video.title}"
-                                       data-description="${video.description}">play
-                                       <i class="fas fa-play-circle fa-lg"></i>
-                                    </a>
-                                </div>
-                                <p class="card-text text-muted">${video.description}</p>
+        video.files.forEach(file => {
+            filesHtml += `
+                <li>
+                    <a href=${file.file_path ? '/storage/'+file.file_path:'/images/default-file_path.jpg'} target="_blank">
+
+                        <i class="fas fa-file me-1"></i>${file.name}
+                    </a>
+                </li>
+            `;
+        });
+
+        filesHtml += `
+            </ul>
+        </div>
+        `;
+    }
+*/
+
+        videosHTML += `
+            <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
+                <div class="card video-card shadow-sm h-100">
+                    <img src="${video.thumbnail ? '/storage/' + video.thumbnail : '/images/default-thumbnail.png'}"
+                        class="card-img-top" alt="${video.title}">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title fw-bold">${video.title}</h5>
+                                <a href="#"
+                                    class="btn btn-link text-decoration-none p-0 play-video-btn"
+                                    data-video-url="${video.video_path ? '/storage/' + video.video_path : '/images/default-video_path.mp4'}"
+                                    data-title="${video.title}"
+                                    data-description="${video.description}">play
+                                    <i class="fas fa-play-circle fa-lg"></i>
+                                </a>
                             </div>
-                            <div class="mt-3">
-                                ${video.level ? getLevelBadge(video.level) : ''}
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <small class="text-muted">${video.duration || 'Durée inconnue'}</small>
-                                    <div class="progress" style="width: 40%; height: 6px;">
-                                        <div class="progress-bar bg-info" style="width: ${video.progress || 0}%;"></div>
-                                    </div>
-                                </div>
+                            <p class="card-text text-muted">${video.description}</p>
+                            ${filesHtml}
+                        </div>
+                        <div class="mt-3">
+                            ${video.niveau ? getLevelBadge(video.niveau) : ''}
+                            <div class="d-flex justify-content-between align-items-center">
+                              <small class="text-muted">${Math.ceil(video.duration / 60)} min</small>
+
                             </div>
                         </div>
+
+                        <a href="/videos/details/${video.id}" class="btn btn-outline-primary btn-sm mt-2">
+                            Produits & Codes
+                        </a>
+
                     </div>
                 </div>
-                `;
-            });
+            </div>
+        `;
+    });
 
-            videosContainer.innerHTML = videosHTML;
-        }
+    videosContainer.innerHTML = videosHTML;
+}
+
 
         // Changement du filtre
         if (levelFilter) {

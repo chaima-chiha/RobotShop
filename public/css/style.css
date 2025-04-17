@@ -396,3 +396,10 @@
     padding-bottom: 1rem;
 }
 
+/*videos detail*/
+.card-title {
+    font-size: 1.1rem;
+}
+.video-files ul {
+    padding-left: 1rem;
+}

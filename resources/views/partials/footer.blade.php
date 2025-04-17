@@ -19,9 +19,9 @@
                 <div class="col-lg-6 ">
                     <div class="footer-item">
                         <h4 class="text-light mb-3">Contact</h4>
-                        <p>Address: 19 Rue El Jahedh ,Nabeul ,8011</p>
-                        <p>RobotShopAcademy@gmail.com</p>
-                        <p>Phone: +216 99 847 516</p>
+                        <p>Adresse: 19 Rue El Jahedh ,Nabeul ,8011</p>
+                        <p>Email:RobotShopAcademy@gmail.com</p>
+                        <p>Telephone: +216 99 847 516</p>
                     </div>
                 </div>
             </div>

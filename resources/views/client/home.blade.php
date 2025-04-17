@@ -56,6 +56,30 @@
 
 </div>
 
+    <!-- Modal Lecture Vidéo -->
+    <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content shadow-lg rounded-4">
+                <div class="modal-header bg-success text-white">
+                    <div>
+                        <h5 class="modal-title" id="video-modal-title">Titre de la vidéo</h5>
+                        <p id="video-modal-description" class="mb-0 small text-white-50">Description de la vidéo</p>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal"
+                        aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="ratio ratio-16x9">
+                        <video id="video-player" class="w-100 rounded-bottom" controls>
+                            <source src="" type="video/mp4">
+                            Votre navigateur ne supporte pas la lecture vidéo.
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 

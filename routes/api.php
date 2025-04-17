@@ -62,7 +62,7 @@ Route::get('/promotion', [ProductController::class, 'indexPromo']);
 //modification
 Route::middleware('auth:sanctum')->put('/orders/{order}', [OrderController::class, 'update']);
 
-
+Route::get('/videos/{id}/with-products', [VideoController::class, 'getWithProducts']);
 Route::get('/videos', [VideoController::class, 'index']);
 Route::get('/videos/{id}', [VideoController::class, 'show']);
 

@@ -77,5 +77,10 @@ class User extends Authenticatable implements FilamentUser
     return $this->hasMany(Cart::class);
 }
 
+public function videoViews()
+{
+    return $this->hasMany(VideoView::class);
+}
+
 }
 

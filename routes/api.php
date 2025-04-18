@@ -66,5 +66,7 @@ Route::get('/videos/{id}/with-products', [VideoController::class, 'getWithProduc
 Route::get('/videos', [VideoController::class, 'index']);
 Route::get('/videos/{id}', [VideoController::class, 'show']);
 
+Route::middleware('auth:sanctum')->post('/videos/{video}/view', [ClientController::class, 'addVideoView']);
+Route::middleware('auth:sanctum')->get('/user/video-history', [ClientController::class, 'videoHistory']);
 
 

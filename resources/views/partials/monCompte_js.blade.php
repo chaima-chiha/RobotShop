@@ -14,6 +14,7 @@
             authMenu.innerHTML = `
                 <li><a class="dropdown-item" href="/profil"><i class="fas fa-user-circle me-2"></i> Mon compte</a></li>
                 <li><a class="dropdown-item" href="/mes-commandes"><i class="fas fa-box text-success me-2"></i> Mes commandes</a></li>
+                 <li><a class="dropdown-item" href="/mes-videos-viewees"><i class="fas fa-video text-success me-2"></i> Mes videos</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item text-danger" href="/" id="logout">
                     <i class="fas fa-sign-out-alt me-2"></i> Se déconnecter

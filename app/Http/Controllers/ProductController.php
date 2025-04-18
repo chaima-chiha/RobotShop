@@ -58,7 +58,7 @@ public function index(Request $request)
 
         // Marquer les produits en promotion
         $product->is_promoted = $product->promotion > 0;
-     
+
         unset($product->category);
     });
 
@@ -76,7 +76,7 @@ public function index(Request $request)
 }
 
 
-    public function show($id)
+   /* public function show($id)
     {
         $product = Product::with(['category', 'videos'])->findOrFail($id);
 
@@ -84,7 +84,34 @@ public function index(Request $request)
             'success' => true,
             'data' => $product
         ]);
+    }*/
+
+    public function show($id)
+{
+    $thirtyDaysAgo = Carbon::now()->subDays(30);
+
+    $product = Product::with('category:id,name')->find($id);
+
+    if (!$product) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Produit non trouvé'
+        ]);
     }
+
+    // Ajouter les propriétés supplémentaires
+    $product->category_name = $product->category ? $product->category->name : null;
+    $product->is_new = $product->created_at >= $thirtyDaysAgo || $product->updated_at >= $thirtyDaysAgo;
+    $product->is_promoted = $product->promotion > 0;
+
+    unset($product->category);
+
+    return response()->json([
+        'success' => true,
+        'data' => $product
+    ]);
+}
+
 
     public function indexNew()
     {

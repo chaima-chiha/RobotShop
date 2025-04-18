@@ -39,3 +39,5 @@ Route::get('/admin/invoice/pdf/{order}', [AdminInvoiceController::class, 'downlo
 Route::get('/admin/invoice', [AdminInvoiceController::class, 'show'])->name('invoice.print');
 
 Route::get('/videos/details/{id}', function ($id) {return view('videos.video-details');});
+
+Route::get('/mes-videos-viewees', function() { return view('videos.mes-videos-viewees');});

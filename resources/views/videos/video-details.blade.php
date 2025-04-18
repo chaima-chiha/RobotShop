@@ -5,7 +5,7 @@
 <div class="container py-4">
     <h2 id="video-title"></h2>
     <p id="video-description"></p>
-    <p><strong>Durée :</strong> <span id="video-duration"></span></p>
+    <p><strong>Durée :</strong> <span id="video-duration"></span>min</p>
 <p><strong>Niveau :</strong> <span id="video-niveau"></span></p>
 <div id="video-progress" class="mb-3"></div>
 <h6>Fichiers associés :</h6>

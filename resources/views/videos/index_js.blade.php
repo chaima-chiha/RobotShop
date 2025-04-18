@@ -90,6 +90,7 @@ videos.forEach(video => {
                                 <h5 class="card-title fw-bold">${video.title}</h5>
                                 <a href="#"
                                     class="btn btn-link text-decoration-none p-0 play-video-btn"
+                                     data-video-id="${video.id}"
                                     data-video-url="${video.video_path ? '/storage/' + video.video_path : '/images/default-video_path.mp4'}"
                                     data-title="${video.title}"
                                     data-description="${video.description}">play
@@ -144,6 +145,19 @@ videos.forEach(video => {
 
                 const modal = new bootstrap.Modal(document.getElementById('videoModal'));
                 modal.show();
+
+                axios.post(`/api/videos/${playBtn.dataset.videoId}/view`, {}, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}` // si tu utilises Sanctum + SPA
+                    }
+                })
+                .then(response => {
+                    console.log('Visionnage enregistré');
+                })
+                .catch(error => {
+                    console.error('Erreur en enregistrant le visionnage:', error);
+                });
+
             }
         });
 

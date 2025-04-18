@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Video;
+use App\Models\VideoView;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -48,5 +50,51 @@ class ClientController extends Controller
     ]);
 }
 
+public function addVideoView(Request $request, Video $video)
+{
+    $user = $request->user();
 
+    if (!$user) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Utilisateur non authentifié.'
+        ], 401);
+    }
+
+    VideoView::firstOrCreate([
+        'user_id' => $user->id,
+        'video_id' => $video->id,
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Visionnage enregistré.'
+    ]);
+}
+
+
+    public function videoHistory(Request $request)
+    {
+       /*$user = $request->user();
+        $history = $user->videoViews()->with('video')->latest()->get();
+
+        return response()->json([
+            'success' => true,
+            'history' => $history
+        ]);*/
+
+        $user = $request->user();
+
+        // On récupère toutes les vidéos que l'utilisateur a vues
+        $videos = Video::whereIn('id', function ($query) use ($user) {
+            $query->select('video_id')
+                  ->from('video_views')
+                  ->where('user_id', $user->id);
+        })->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $videos
+        ]);
+    }
 }

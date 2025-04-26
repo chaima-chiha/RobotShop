@@ -29,12 +29,17 @@ class Product extends Model
 
 
 
-public function getAvailableStockAttribute()
-{
-    $ordered = $this->orderItems()->sum('quantity');
-    $cart = $this->cart()->sum('quantity');
-    return max(0, $this->stock - $ordered - $cart);
-}
+    public function getAvailableStockAttribute()
+    {
+        // Quantité totale commandée pour ce produit
+        $ordered = $this->orderItems()->sum('quantity');
+
+        // Quantité totale dans le panier pour ce produit
+        $cart = $this->productcartItems()->sum('quantity');
+
+        // Stock disponible = stock total - quantité commandée - quantité dans le panier
+        return max(0, $this->stock - $ordered - $cart);
+    }
 
     // Relation avec la catégorie
     public function category()
@@ -56,16 +61,16 @@ public function getAvailableStockAttribute()
     }
 
     //relation avec le panier
-    public function cart()
-    {
-        return $this->hasMany(Cart::class);
-    }
+
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
     }
 
-
+    public function productcartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
 
 
 }

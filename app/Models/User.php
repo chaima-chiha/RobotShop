@@ -64,18 +64,21 @@ class User extends Authenticatable implements FilamentUser
 
     public function orders()
     {
-    //return $this->hasMany(Order::class);
+    return $this->hasMany(Order::class);
     }
-
+    //public function cart()
+    //{  return $this->hasOne(Cart::class)->withDefault();}
+    
     public function cart()
     {
-        return $this->hasMany(Cart::class);
+        return $this->hasOne(Cart::class)->withDefault(function ($cart) {
+            $cart->save(); // Sauvegarde automatique du panier s'il n'existe pas
+        });
     }
-
     public function cartItems()
-{
-    return $this->hasMany(Cart::class);
-}
+    {
+        return $this->hasManyThrough(CartItem::class, Cart::class);
+    }
 
 public function videoViews()
 {

@@ -8,22 +8,15 @@ class Cart extends Model
 {
     protected $fillable = [
         'user_id',
-         'product_id',
-         'quantity'
-        ];
+    ];
 
-
-     // Obtenir l'utilisateur qui possède le panier.
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-
-     // Obtenir le produit associé au panier.
-    public function product()
-{
-    return $this->belongsTo(Product::class);
-}
-
+    public function items()
+    {
+        return $this->hasMany(CartItem::class);
+    }
 }

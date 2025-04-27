@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\DB;
 class VideoController extends Controller
 {
 
@@ -51,7 +51,7 @@ class VideoController extends Controller
             'data' => $videos
         ]);
     }
-
+/*
     public function getWithProducts($id){
     $thirtyDaysAgo = Carbon::now()->subDays(30);
 
@@ -73,5 +73,35 @@ class VideoController extends Controller
         'success' => true,
         'data' => $video
     ]);
+}*/
+
+
+
+
+public function getWithProducts($id)
+{
+    $thirtyDaysAgo = Carbon::now()->subDays(30);
+
+    $video = Video::with(['products.category', 'files'])->findOrFail($id);
+
+    $video->products->each(function ($product) use ($thirtyDaysAgo) {
+        $product->category_name = optional($product->category)->name;
+        $product->is_new = $product->created_at >= $thirtyDaysAgo || $product->updated_at >= $thirtyDaysAgo;
+        $product->is_promoted = $product->promotion > 0;
+        unset($product->category);
+    });
+
+    // Chercher des vidéos similaires
+    $similarVideos = Video::where('niveau', $video->niveau)
+                    ->where('id', '!=', $video->id)
+                    ->take(4) // Par exemple, limite à 4 vidéos
+                    ->get();
+
+    return response()->json([
+        'success' => true,
+        'data' => $video,
+        'similar_videos' => $similarVideos
+    ]);
 }
+
 }

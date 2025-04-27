@@ -14,6 +14,29 @@
     <h4>Produits associés</h4>
     <div id="products" class="row"></div>
     <div id="loading" style="display: none;">Chargement...</div>
+
+    <h4>Vidéos similaires</h4>
+<div id="similar-videos" class="row mb-5"></div>
+
+
+    <!-- Modal pour lire une vidéo -->
+    <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="video-modal-title">Lecture de la vidéo</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+              <video id="video-player" class="w-100" controls>
+                <source src="" type="video/mp4">
+                Votre navigateur ne supporte pas la lecture vidéo.
+              </video>
+              <p id="video-modal-description" class="mt-2"></p>
+            </div>
+          </div>
+        </div>
+      </div>
 </div>
 
 
@@ -24,6 +47,8 @@ document.addEventListener('DOMContentLoaded', function () {
     axios.get(`/api/videos/${videoId}/with-products`)
     .then(response => {
     const video = response.data.data;
+    const similarVideos = response.data.similar_videos;
+displaySimilarVideos(similarVideos);
 
     document.getElementById('video-title').textContent = video.title;
     document.getElementById('video-description').textContent = video.description;
@@ -174,6 +199,97 @@ function addToCart(productId) {
         showModal('Erreur lors de l\'ajout au panier.', 'danger');
     });
 }
+
+
+function displaySimilarVideos(videos) {
+    const container = document.getElementById('similar-videos');
+
+    if (videos.length === 0) {
+        container.innerHTML = '<p>Aucune vidéo similaire trouvée.</p>';
+        return;
+    }
+
+    let videosHTML = '';
+    videos.forEach(video => {
+        videosHTML += `
+            <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
+                <div class="card video-card shadow-sm h-100">
+                    <img src="${video.thumbnail ? '/storage/' + video.thumbnail : '/images/default-thumbnail.png'}"
+                        class="card-img-top" alt="${video.title}">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title fw-bold">${video.title}</h5>
+                                <a href="#"
+                                    class="btn btn-link text-decoration-none p-0 play-video-btn"
+                                    data-video-id="${video.id}"
+                                    data-video-url="${video.video_path ? '/storage/' + video.video_path : '/images/default-video_path.mp4'}"
+                                    data-title="${video.title}"
+                                    data-description="${video.description}">
+                                    <i class="fas fa-play-circle fa-lg"></i>play
+                                </a>
+                            </div>
+                            <p class="card-text text-muted">${video.description}</p>
+                        </div>
+                        <div class="mt-3">
+                            ${video.niveau ? getLevelBadge(video.niveau) : ''}
+                            <div class="d-flex justify-content-between align-items-center">
+                              <small class="text-muted">${Math.ceil(video.duration / 60)} min</small>
+                            </div>
+                        </div>
+                        <a href="/videos/details/${video.id}" class="btn btn-outline-primary btn-sm mt-2">
+                            Produits & Codes
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = videosHTML;
+}
+
+
+        // Gestion du clic sur lecture vidéo
+        document.addEventListener('click', function (e) {
+            const playBtn = e.target.closest('.play-video-btn');
+            if (playBtn) {
+                e.preventDefault();
+
+                const videoUrl = playBtn.dataset.videoUrl;
+                const title = playBtn.dataset.title;
+                const description = playBtn.dataset.description;
+
+                document.getElementById('video-player').src = videoUrl;
+                document.getElementById('video-modal-title').textContent = title;
+                document.getElementById('video-modal-description').textContent = description;
+
+                const modal = new bootstrap.Modal(document.getElementById('videoModal'));
+                modal.show();
+
+                axios.post(`/api/videos/${playBtn.dataset.videoId}/view`, {}, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}` // si tu utilises Sanctum + SPA
+                    }
+                })
+                .then(response => {
+                    console.log('Visionnage enregistré');
+                })
+                .catch(error => {
+                    console.error('Erreur en enregistrant le visionnage:', error);
+                });
+
+            }
+        });
+
+        // Nettoyage du player à la fermeture du modal
+        document.getElementById('videoModal').addEventListener('hidden.bs.modal', function () {
+            const player = document.getElementById('video-player');
+            player.pause();
+            player.currentTime = 0;
+            player.src = '';
+        });
+
 </script>
 @endsection
 

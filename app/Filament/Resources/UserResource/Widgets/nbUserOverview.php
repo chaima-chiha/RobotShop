@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources\UserResource\Widgets;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\Video;
+use App\Models\VideoView;
+use Illuminate\Support\Facades\DB;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class nbUserOverview extends StatsOverviewWidget
 {
@@ -44,24 +46,35 @@ class nbUserOverview extends StatsOverviewWidget
             ->orderBy('month')
             ->pluck('count')
             ->toArray();
+         
+
 
         return [
+
+            Stat::make('Chiffre d\'affaires', number_format($revenue, 2) . ' TND')
+            ->description('Total des ventes')
+            ->descriptionIcon('heroicon-m-banknotes')
+            ->chart($this->fillMissingMonths($monthlyRevenue))
+            ->color('primary'),
+
             Stat::make('Nombre de clients', $clientCount)
                 ->description('Clients enregistrés')
                 ->descriptionIcon('heroicon-m-user-group')
                 ->chart($this->fillMissingMonths($monthlyClients))
                 ->color('success'),
 
-            Stat::make('Nombre de commandes', $orderCount)
+                Stat::make('Nombre de commandes', $orderCount)
                 ->description('Commandes passées')
                 ->descriptionIcon('heroicon-m-shopping-bag')
                 ->chart($this->fillMissingMonths($monthlyOrders))
                 ->color('info'),
-            Stat::make('Chiffre d\'affaires', number_format($revenue, 2) . ' TND')
-                ->description('Total des ventes')
-                ->descriptionIcon('heroicon-m-banknotes')
-                ->chart($this->fillMissingMonths($monthlyRevenue))
-                ->color('primary'),
+
+
+
+                Stat::make('Total des vues', VideoView::count())
+                ->description('Toutes les visualisations enregistrées')
+                ->descriptionIcon('heroicon-m-eye')
+                ->color('success'),
         ];
     }
 

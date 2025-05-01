@@ -18,8 +18,14 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use App\Filament\Resources\UserResource\Widgets\OrdersChart;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use App\Filament\Resources\UserResource\Widgets\nbUserOverview;
+use App\Filament\Resources\UserResource\Widgets\VideoViewsChart;
+use App\Filament\Resources\UserResource\Widgets\OrderStatusChart;
+use App\Filament\Resources\UserResource\Widgets\VideoConversionRate;
+use App\Filament\Resources\UserResource\Widgets\VideoOrderStatsChart;
+use App\Filament\Resources\UserResource\Widgets\UserRegistrationChart;
 use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
 
 
@@ -47,9 +53,15 @@ class AdminPanelProvider extends PanelProvider
                 //Widgets\AccountWidget::class,
                 //Widgets\FilamentInfoWidget::class,
                 nbUserOverview::class,
+
                 Stats::class,
+                UserRegistrationChart::class,
+                OrdersChart::class,
+                VideoViewsChart::class,
 
-
+                VideoConversionRate::class,
+                OrderStatusChart::class,
+                VideoOrderStatsChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,

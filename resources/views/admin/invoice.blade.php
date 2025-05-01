@@ -11,7 +11,7 @@
 </div>
     <div class="container py-5" id="invoice">
         <!-- Le contenu complet du bon de commande -->
-        <h2 class="mb-4">Bon de Commande #{{ $order->id }}</h2>
+        <h2 class="mb-4">Bon de Commande n°{{ $order->id }}</h2>
         <p><strong>Client :</strong> {{ $order->nom }}</p>
         <p><strong>Adresse :</strong> {{ $order->adresse }}</p>
         <p><strong>Téléphone :</strong> {{ $order->telephone }}</p>

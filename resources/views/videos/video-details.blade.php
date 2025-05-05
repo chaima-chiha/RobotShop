@@ -55,20 +55,36 @@ displaySimilarVideos(similarVideos);
     document.getElementById('video-duration').textContent = Math.ceil(video.duration / 60);
     document.getElementById('video-niveau').innerHTML = getLevelBadge(video.niveau);
 
-   if (video.files && video.files.length > 0) {
-        document.getElementById('video-files').innerHTML = `
-            <ul>
-                ${video.files.map(file => `
-                    <li><a href="${file.file_path ? '/storage/' + file.file_path : '/images/default-file_path.jpg'}" target="_blank">
+    if (video.files && video.files.length > 0) {
+    document.getElementById('video-files').innerHTML = `
+        <ul>
+            ${video.files.map(file => `
+                <li>
+                    <a href="#" class="file-download-link" data-file="${file.file_path ? '/storage/' + file.file_path : '/images/default-file_path.jpg'}">
                         <i class="fas fa-file"></i> ${file.name}
-                    </a></li>
-                `).join('')}
-            </ul>
-        `;
+                    </a>
+                </li>
+            `).join('')}
+        </ul>
+    `;
 
-    } else {
-        document.getElementById('video-files').innerHTML = '<p>Aucun fichier associé.</p>';
-    }
+    // Ajout du comportement au clic
+    document.querySelectorAll('.file-download-link').forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const token = localStorage.getItem('token');
+            if (!token) {
+                showModal('Veuillez vous connecter pour télécharger ce fichier.');
+                return;
+            }
+            // Redirection vers le fichier si connecté
+            window.open(this.dataset.file, '_blank');
+        });
+    });
+
+} else {
+    document.getElementById('video-files').innerHTML = '<p>Aucun fichier associé.</p>';
+}
 
     displayProducts(video.products);
 })
@@ -255,7 +271,12 @@ function displaySimilarVideos(videos) {
             const playBtn = e.target.closest('.play-video-btn');
             if (playBtn) {
                 e.preventDefault();
+                const token = localStorage.getItem('token');
 
+                    if (!token) {
+                        showModal('Veuillez vous connecter pour regarder la vidéo.');
+                        return; // empêche l'ouverture du modal
+                    }
                 const videoUrl = playBtn.dataset.videoUrl;
                 const title = playBtn.dataset.title;
                 const description = playBtn.dataset.description;

@@ -21,18 +21,18 @@ class OrderController extends Controller
         $user = Auth::user();
 
         // Retrieve all orders for the authenticated user
-        $orders = Order::with('items.product')
+        $orders = Order::with(['items.product', 'items.video'])
             ->where('user_id', $user->id)
             ->get();
 
         // Return the list of orders as a JSON response
         return response()->json(['success' => true, 'data' => $orders]);
     }
-    public function show($id)
 
+    public function show($id)
     {
         $user = Auth::user(); // récupère l'utilisateur connecté
-        $order = Order::with('items.product')->find($id);
+        $order = Order::with(['items.product', 'items.video'])->find($id);
 
         if (!$order) {
             return response()->json(['success' => false, 'message' => 'Commande introuvable'], 404);
@@ -45,23 +45,25 @@ class OrderController extends Controller
     }
 
 
+
     public function store(Request $request)
     {
         try {
             // Validate the request data
-            $validatedData =
-            $request->validate([
-            'nom' => 'required|string|max:255',
-            'adresse' => 'required|string|max:255',
-            'telephone' => 'required|string|max:20',
-            'livraison' => 'required|in:domicile,retrait',
-            'total' => 'required|numeric|min:0',
-            'items' => 'required|array|min:1',
-            'items.*.product_id' => 'required|integer|exists:products,id',
-            'items.*.quantity' => 'required|integer|min:1',
-            'items.*.price' => 'required|numeric|min:0'
-        ]);
-
+            $validatedData = $request->validate([
+                'nom' => 'required|string|max:255',
+                'adresse' => 'required|string|max:255',
+                'telephone' => 'required|string|max:20',
+                'livraison' => 'required|in:domicile,retrait',
+                'total' => 'required|numeric|min:0',
+                'items' => 'required|array|min:1',
+                'items.*.item_id' => 'required|integer|exists:cart_items,id',
+                'items.*.product_id' => 'nullable|exists:products,id',
+                'items.*.video_id' => 'nullable|exists:videos,id',
+                'items.*.quantity' => 'required|integer|min:1',
+                'items.*.price' => 'required|numeric|min:0'
+            ]);
+            Log::info('validation donner', $validatedData);
             // Get the authenticated user
             $user = Auth::user();
             if (!$user) {
@@ -82,15 +84,15 @@ class OrderController extends Controller
                 throw new \Exception('Failed to save order.');
             }
 
-
             // Create order items
             foreach ($validatedData['items'] as $item) {
+                Log::info('Creating order item:', $item); // Ajoutez cette ligne pour le log
                 $orderItem = OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $item['product_id'],
+                    'video_id' => $item['video_id'],
                     'quantity' => $item['quantity'],
                     'price' => $item['price'],
-
                 ]);
                 if (!$orderItem) {
                     throw new \Exception('Failed to create order item.');
@@ -101,10 +103,10 @@ class OrderController extends Controller
             DB::commit();
 
             return response()->json([
-            'success' => true,
-             'order_id' => $order->id,
-            'message' => 'Commande créée avec succès.'
-             ]);
+                'success' => true,
+                'order_id' => $order->id,
+                'message' => 'Commande créée avec succès.'
+            ]);
 
         } catch (\Exception $e) {
             // Rollback the transaction in case of error
@@ -117,48 +119,53 @@ class OrderController extends Controller
         }
     }
 
-    public function update(Request $request, Order $order)
-    {
-        $request->validate([
-            'nom' => 'required|string',
-            'adresse' => 'required|string',
-            'telephone' => 'required|string',
-            'livraison' => 'required|string',
-            'status' => 'nullable|in:en_attente,annulée',
-            'products' => 'required|array',
-            'products.*.product_id' => 'required|exists:products,id',
-            'products.*.quantity' => 'required|integer|min:1',
-            'products.*.price' => 'required|numeric|min:0',
+
+
+public function update(Request $request, Order $order)
+{
+    $request->validate([
+        'nom' => 'required|string',
+        'adresse' => 'required|string',
+        'telephone' => 'required|string',
+        'livraison' => 'required|string',
+        'status' => 'nullable|in:en_attente,annulée',
+        'items' => 'required|array',
+       
+        'items.*.product_id' => 'nullable|exists:products,id',
+        'items.*.video_id' => 'nullable|exists:videos,id',
+        'items.*.quantity' => 'required|integer|min:1',
+        'items.*.price' => 'required|numeric|min:0',
+    ]);
+
+    $order->update([
+        'nom' => $request->nom,
+        'adresse' => $request->adresse,
+        'telephone' => $request->telephone,
+        'livraison' => $request->livraison,
+        'status' => $request->status ?? $order->status,
+    ]);
+
+    // Supprimer les anciens items et recréer
+    $order->items()->delete();
+
+    foreach ($request->items as $item) {
+        $order->items()->create([
+            'product_id' => $item['product_id'] ?? null,
+            'video_id' => $item['video_id'] ?? null,
+            'quantity' => $item['quantity'],
+            'price' => $item['price'],
         ]);
-
-        $order->update([
-            'nom' => $request->nom,
-            'adresse' => $request->adresse,
-            'telephone' => $request->telephone,
-            'livraison' => $request->livraison,
-            'status' => $request->status ?? $order->status,
-        ]);
-
-        // Supprimer les anciens items et recréer
-        $order->items()->delete();
-
-        foreach ($request->products as $item) {
-            $order->items()->create([
-                'product_id' => $item['product_id'],
-                'quantity' => $item['quantity'],
-                'price' => $item['price'],
-            ]);
-        }
-
-        // Recalculer le total
-        $total = collect($request->products)->sum(function ($p) {
-            return $p['price'] * $p['quantity'];
-        });
-
-        $order->update(['total' => $total]);
-
-        return response()->json(['success' => true, 'message' => 'Commande mise à jour.']);
     }
+
+    // Recalculer le total
+    $total = collect($request->items)->sum(function ($p) {
+        return $p['price'] * $p['quantity'];
+    });
+
+    $order->update(['total' => $total]);
+
+    return response()->json(['success' => true, 'message' => 'Commande mise à jour.']);
+}
 
 
 

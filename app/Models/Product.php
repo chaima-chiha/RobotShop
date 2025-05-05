@@ -26,7 +26,7 @@ class Product extends Model
     ];
 
     protected $appends = ['available_stock',];
-
+    protected $casts = ['price' => 'float',];
 
 
     public function getAvailableStockAttribute()

@@ -16,7 +16,7 @@
 
                         <!-- Titre principal -->
                         <div class="col-md-4 text-center">
-                            <h3 class="mb-0"> Bon de Commande</h3>
+                            <h3 class="mb-0">Bon de Commande</h3>
                         </div>
 
                         <!-- Coordonnées -->
@@ -27,7 +27,6 @@
                         </div>
                     </div>
                 </div>
-
 
                 <div class="card-body" id="invoice-content">
                     <p class="text-center text-muted">Chargement en cours...</p>
@@ -77,7 +76,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         <thead class="table-light">
                             <tr>
                                 <th>Image</th>
-                                <th>Produit</th>
+                                <th>Nom</th>
+                                <th>Type</th>
                                 <th>Quantité</th>
                                 <th>Prix unitaire</th>
                                 <th>Total</th>
@@ -88,10 +88,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
             order.items.forEach(item => {
                 const product = item.product;
+                const video = item.video;
+                const name = product ? product.name : (video ? video.title : 'N/A');
+                const type = product ? 'Produit' : (video ? 'Vidéo' : 'Inconnu');
+                const image = product ? (product.image ? '/storage/' + product.image : '/images/default.png') : (video ? (video.thumbnail ? '/storage/' + video.thumbnail : '/images/default.png') : '/images/default.png');
+
                 html += `
                     <tr>
-                        <td><img src="${product.image ? '/storage/' + product.image : '/images/default.png'}" width="50" class="rounded" /></td>
-                        <td>${product.name}</td>
+                        <td><img src="${image}" width="50" class="rounded" /></td>
+                        <td>${name}</td>
+                        <td>${type}</td>
                         <td>${item.quantity}</td>
                         <td>${item.price} TND</td>
                         <td>${(item.price * item.quantity).toFixed(2)} TND</td>
@@ -105,12 +111,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>
 
                 <div class="text-end mt-4">
-                     <p class="mb-1"><strong>Frais de livraison :</strong> ${order.livraison=== 'domicile' ?`= 7`:`= 0`} TND</p>
-
+                    <p class="mb-1"><strong>Frais de livraison :</strong> ${order.livraison === 'domicile' ? '7 TND' : '0 TND'}</p>
                     <h4 class="text-success">Total : ${order.total} TND</h4>
                 </div>
             `;
-
 
             invoiceContent.innerHTML = html;
         } else {

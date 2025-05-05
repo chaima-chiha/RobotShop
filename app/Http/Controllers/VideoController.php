@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\VideoActivationCode;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -101,6 +101,24 @@ public function getWithProducts($id)
         'success' => true,
         'data' => $video,
         'similar_videos' => $similarVideos
+    ]);
+}
+
+public function verifyActivationCode(Request $request, Video $video)
+{
+    $request->validate([
+        'code' => 'required|string'
+    ]);
+
+    $user = $request->user();
+
+    $activation =VideoActivationCode::where('user_id', $user->id)
+        ->where('video_id', $video->id)
+        ->where('code', $request->code)
+        ->first();
+
+    return response()->json([
+        'valid' => $activation !== null
     ]);
 }
 

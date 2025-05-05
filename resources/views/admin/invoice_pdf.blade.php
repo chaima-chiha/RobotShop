@@ -21,7 +21,8 @@
     <table>
         <thead>
             <tr>
-                <th>Produit</th>
+                <th>Nom</th>
+                <th>Type</th>
                 <th>Quantité</th>
                 <th>Prix</th>
                 <th>Total</th>
@@ -30,7 +31,16 @@
         <tbody>
             @foreach ($order->items as $item)
                 <tr>
-                    <td>{{ $item->product->name }}</td>
+                    @if ($item->product)
+                        <td>{{ $item->product->name }}</td>
+                        <td>Produit</td>
+                    @elseif ($item->video)
+                        <td>{{ $item->video->title }}</td>
+                        <td>Vidéo</td>
+                    @else
+                        <td>Inconnu</td>
+                        <td>Inconnu</td>
+                    @endif
                     <td>{{ $item->quantity }}</td>
                     <td>{{ $item->price }} TND</td>
                     <td>{{ number_format($item->price * $item->quantity, 2) }} TND</td>

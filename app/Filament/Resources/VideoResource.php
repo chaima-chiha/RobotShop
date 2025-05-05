@@ -36,7 +36,9 @@ class VideoResource extends Resource
                 Forms\Components\Select::make('category_id')
                     ->relationship('category', 'name')
                     ->required(),
-
+                    Forms\Components\TextInput::make('price')
+                    ->required()
+                    ->numeric(),
 
                     Select::make('niveau')
                         ->options([
@@ -79,7 +81,7 @@ class VideoResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
-
+                    Tables\Columns\TextColumn::make('price'),
                 ImageColumn::make('thumbnail')
                     ->label('Miniature')
                     ->disk('public')
@@ -101,7 +103,7 @@ class VideoResource extends Resource
                     ->limitList(3)
                     ->expandableLimitedList(),
 
-                    
+
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

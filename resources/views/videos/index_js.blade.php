@@ -79,42 +79,55 @@ videos.forEach(video => {
     }
 */
 
-        videosHTML += `
-            <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
-                <div class="card video-card shadow-sm h-100">
-                    <img src="${video.thumbnail ? '/storage/' + video.thumbnail : '/images/default-thumbnail.png'}"
-                        class="card-img-top" alt="${video.title}">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <div>
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h5 class="card-title fw-bold">${video.title}</h5>
-                                <a href="#"
-                                    class="btn btn-link text-decoration-none p-0 play-video-btn"
-                                     data-video-id="${video.id}"
-                                    data-video-url="${video.video_path ? '/storage/' + video.video_path : '/images/default-video_path.mp4'}"
-                                    data-title="${video.title}"
-                                    data-description="${video.description}">play
-                                    <i class="fas fa-play-circle fa-lg"></i>
-                                </a>
-                            </div>
-                            <p class="card-text text-muted">${video.description}</p>
-                            ${filesHtml}
-                        </div>
-                        <div class="mt-3">
-                            ${video.niveau ? getLevelBadge(video.niveau) : ''}
-                            <div class="d-flex justify-content-between align-items-center">
-                              <small class="text-muted">${Math.ceil(video.duration / 60)} min</small>
+// Ajouter bouton d'achat si niveau avancé
+let buyButtonHtml = '';
 
-                            </div>
-                        </div>
+if (video.niveau === 'Avancé') {
+    buyButtonHtml = `
+        <button class="btn btn-danger btn-sm mt-2 w-100 add-to-cart-btnvideo"
+              data-video-id="${video.id}"
+              data-product-name="${video.title}"
+              data-product-price="${video.price}">
+            Acheter - ${video.price ? video.price.toFixed(2) + ' TND' : 'Prix non défini'}
+        </button>
+    `;
+}
 
-                        <a href="/videos/details/${video.id}" class="btn btn-outline-primary btn-sm mt-2">
-                            Produits & Codes
+videosHTML += `
+    <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
+        <div class="card video-card shadow-sm h-100">
+            <img src="${video.thumbnail ? '/storage/' + video.thumbnail : '/images/default-thumbnail.png'}"
+                class="card-img-top" alt="${video.title}">
+            <div class="card-body d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title fw-bold">${video.title}</h5>
+                        <a href="#"
+                            class="btn btn-link text-decoration-none p-0 play-video-btn"
+                            data-video-id="${video.id}"
+                            data-video-url="${video.video_path ? '/storage/' + video.video_path : '/images/default-video_path.mp4'}"
+                            data-title="${video.title}"
+                            data-description="${video.description}"
+                               data-niveau="${video.niveau}">play
+                            <i class="fas fa-play-circle fa-lg"></i>
                         </a>
-
+                    </div>
+                    <p class="card-text text-muted">${video.description}</p>
+                    ${filesHtml}
+                </div>
+                <div class="mt-3">
+                    ${video.niveau ? getLevelBadge(video.niveau) : ''}
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">${Math.ceil(video.duration / 60)} min</small>
                     </div>
                 </div>
+                <a href="/videos/details/${video.id}" class="btn btn-outline-primary btn-sm mt-2">
+                    Produits & Codes
+                </a>
+                ${buyButtonHtml}
             </div>
+        </div>
+    </div>
         `;
     });
 
@@ -129,37 +142,110 @@ videos.forEach(video => {
             });
         }
 
-        // Gestion du clic sur lecture vidéo
-        document.addEventListener('click', function (e) {
-            const playBtn = e.target.closest('.play-video-btn');
-            if (playBtn) {
-                e.preventDefault();
 
-                const videoUrl = playBtn.dataset.videoUrl;
-                const title = playBtn.dataset.title;
-                const description = playBtn.dataset.description;
+        //*************
 
-                document.getElementById('video-player').src = videoUrl;
-                document.getElementById('video-modal-title').textContent = title;
-                document.getElementById('video-modal-description').textContent = description;
 
-                const modal = new bootstrap.Modal(document.getElementById('videoModal'));
-                modal.show();
+//Vidéo ajoutée au panier
+document.addEventListener('click', function (e) {
+    const buyBtn = e.target.closest('.add-to-cart-btnvideo');
 
-                axios.post(`/api/videos/${playBtn.dataset.videoId}/view`, {}, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}` // si tu utilises Sanctum + SPA
-                    }
-                })
-                .then(response => {
-                    console.log('Visionnage enregistré');
-                })
-                .catch(error => {
-                    console.error('Erreur en enregistrant le visionnage:', error);
-                });
+    if (buyBtn) {
+        e.preventDefault();
+        const videoId = buyBtn.dataset.videoId;
 
+        const token = localStorage.getItem('token');
+        if (!token) {
+            showModal('Veuillez vous connecter pour ajouter au panier.');
+            return;
+        }
+
+        axios.post('/api/cart/add-video', {
+            video_id: videoId,
+            quantity: 1
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`
             }
+        })
+        .then(response => {
+
+            if (response.data.success) {
+                showModal('Vidéo ajoutée au panier.');
+            } else {
+                showModal('Erreur lors de l’ajout au panier.');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur ajout au panier:', error);
+            showModal('Erreur lors de l’ajout au panier.');
         });
+    }
+});
+
+
+
+       // Gestion du clic sur lecture vidéo
+document.addEventListener('click', function (e) {
+    const playBtn = e.target.closest('.play-video-btn');
+    if (playBtn) {
+        e.preventDefault();
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            showModal('Veuillez vous connecter pour regarder la vidéo.');
+            return;
+        }
+
+        const videoId = playBtn.dataset.videoId;
+        const niveau = playBtn.dataset.niveau;
+
+        const playVideo = () => {
+            const videoUrl = playBtn.dataset.videoUrl;
+            const title = playBtn.dataset.title;
+            const description = playBtn.dataset.description;
+
+            document.getElementById('video-player').src = videoUrl;
+            document.getElementById('video-modal-title').textContent = title;
+            document.getElementById('video-modal-description').textContent = description;
+
+            const modal = new bootstrap.Modal(document.getElementById('videoModal'));
+            modal.show();
+
+            axios.post(`/api/videos/${videoId}/view`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            }).then(() => {
+                console.log('Visionnage enregistré');
+            }).catch(error => {
+                console.error('Erreur en enregistrant le visionnage:', error);
+            });
+        };
+
+        if (niveau === 'Avancé') {
+            const code = prompt("Entrez le code d'activation de cette vidéo avancée :");
+            if (!code) return;
+
+            axios.post(`/api/videos/${videoId}/verify-code`, {
+                code: code
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            .then(res => {
+                if (res.data.valid) {
+                    playVideo();
+                } else {
+                    alert('Code invalide ou expiré.');
+                }
+            })
+            .catch(() => {
+                alert('Erreur lors de la vérification du code.');
+            });
+        } else {
+            playVideo();
+        }
+    }
+});
+
 
         // Nettoyage du player à la fermeture du modal
         document.getElementById('videoModal').addEventListener('hidden.bs.modal', function () {

@@ -58,20 +58,30 @@ function updateCartCount(products) {
 
 // Appel dans DOMContentLoaded
 document.addEventListener('DOMContentLoaded', function () {
-    axios.get('/api/cart', {
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-    })
-    .then(response => {
-        if (response.data.success) {
-            updateCartCount(response.data.data); // ✅ Appel ici
-        }
-    })
-    .catch(error => {
-        console.error('Erreur lors de la récupération du compteur du panier:', error);
-    });
+    const token = localStorage.getItem('token');
+
+    if (token) {
+        axios.get('/api/cart', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => {
+            if (response.data.success) {
+                updateCartCount(response.data.data); // ✅ Appel ici
+            } else {
+                updateCartCount([]); // Set to 0 if API call fails
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération du compteur du panier:', error);
+            updateCartCount([]); // Set to 0 if API call fails
+        });
+    } else {
+        updateCartCount([]); // Set to 0 if user is not logged in
+    }
 });
+
 
 
 </script>

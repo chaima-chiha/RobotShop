@@ -13,12 +13,16 @@
         <table class="table table-bordered align-middle mb-0">
             <thead class="table-success text-center">
                 <tr>
-                    <th scope="col">Produit</th>
+
+                    <th scope="col">Image</th>
+
                     <th scope="col">Nom</th>
+
                     <th scope="col">Prix</th>
                     <th scope="col">Quantité</th>
                     <th scope="col">Total</th>
                     <th scope="col">Détacher</th>
+                    <th scope="col">Type</th>
                 </tr>
             </thead>
             <tbody id="cart-table-body" class="text-center">

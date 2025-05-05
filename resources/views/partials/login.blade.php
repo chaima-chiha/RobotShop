@@ -14,12 +14,12 @@ document.getElementById('LoginForm').addEventListener('submit', function(e) {
             localStorage.setItem('token', response.data.result.token);
 
             // Affichage d'une alerte de succès
-            showModal('✅ Connexion réussie ! Redirection en cours...','success');
+            showModal('✅ Connexion réussie','success');
 
-            // Redirection après un court délai
-            setTimeout(() => {
-                window.location.href = '/profil';
-            }, 2000);
+               // Redirection après 2 secondes
+               setTimeout(() => {
+                window.location.href = '/';
+            }, 1000);
         })
         .catch(function (error) {
             if (error.response && error.response.data && error.response.data.errors) {

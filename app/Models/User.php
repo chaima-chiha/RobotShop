@@ -68,7 +68,7 @@ class User extends Authenticatable implements FilamentUser
     }
     //public function cart()
     //{  return $this->hasOne(Cart::class)->withDefault();}
-    
+
     public function cart()
     {
         return $this->hasOne(Cart::class)->withDefault(function ($cart) {
@@ -83,6 +83,10 @@ class User extends Authenticatable implements FilamentUser
 public function videoViews()
 {
     return $this->hasMany(VideoView::class);
+}
+public function videoActivationCodes()
+{
+    return $this->hasMany(VideoActivationCode::class);
 }
 
 }

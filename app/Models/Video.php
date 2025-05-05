@@ -18,7 +18,12 @@ class Video extends Model
         'thumbnail',
         'duration',
         'category_id',
-        'niveau'
+        'niveau',
+        'price'
+    ];
+
+    protected $casts = [
+        'price' => 'float',
     ];
 
     // Relation avec la catégorie si nécessaire
@@ -54,5 +59,19 @@ class Video extends Model
     {
         return $this->hasMany(VideoView::class);
     }
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+    public function activationCodes()
+{
+    return $this->hasMany(VideoActivationCode::class);
+}
 
 }

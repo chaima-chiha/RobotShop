@@ -11,7 +11,7 @@ class OrderItem extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['order_id', 'product_id', 'quantity', 'price'];
+    protected $fillable = ['order_id', 'product_id','video_id', 'quantity', 'price'];
 
     public function order()
     {
@@ -21,5 +21,9 @@ class OrderItem extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+    public function video()
+    {
+        return $this->belongsTo(Video::class);
     }
 }

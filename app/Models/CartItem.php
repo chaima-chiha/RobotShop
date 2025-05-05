@@ -11,6 +11,7 @@ class CartItem extends Model
         'product_id',
         'quantity',
         'price',
+        'video_id',
     ];
 
    public function cart()
@@ -22,4 +23,10 @@ class CartItem extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    public function video()
+{
+    return $this->belongsTo(Video::class);
+}
+
 }

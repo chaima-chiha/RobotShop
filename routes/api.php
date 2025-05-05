@@ -55,12 +55,12 @@ Route::get('/promotion', [ProductController::class, 'indexPromo']);
     Route::get('/orders/{id}', [OrderController::class, 'show']);
     Route::post('/orders', [OrderController::class, 'store']);
     Route::get('/orders', [OrderController::class, 'index']);
-
+//modification
+Route::put('/orders/{order}', [OrderController::class, 'update']);
 });
 
 
-//modification
-Route::middleware('auth:sanctum')->put('/orders/{order}', [OrderController::class, 'update']);
+
 
 Route::get('/videos/{id}/with-products', [VideoController::class, 'getWithProducts']);
 Route::get('/videos', [VideoController::class, 'index']);
@@ -69,4 +69,6 @@ Route::get('/videos/{id}', [VideoController::class, 'show']);
 Route::middleware('auth:sanctum')->post('/videos/{video}/view', [ClientController::class, 'addVideoView']);
 Route::middleware('auth:sanctum')->get('/user/video-history', [ClientController::class, 'videoHistory']);
 
+Route::middleware('auth:sanctum')->post('/cart/add-video', [CartController::class, 'addVideoToCart']);
+Route::middleware('auth:sanctum')->post('/videos/{video}/verify-code', [VideoController::class, 'verifyActivationCode']);
 

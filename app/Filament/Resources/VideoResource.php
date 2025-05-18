@@ -51,7 +51,7 @@ class VideoResource extends Resource
                     ->label('Vidéo')
                     ->directory('videos')
                     ->acceptedFileTypes(['video/mp4', 'video/quicktime'])
-                    ->maxSize(50240) // 50MB
+                    ->maxSize(502400) // 50MB
                     ->downloadable()
                     ->columnSpanFull(),
 

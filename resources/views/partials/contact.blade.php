@@ -15,20 +15,21 @@
                         <p class="mb-4">Notre meilleur site d'apprentissage et d'achat de robotique.</p>
                     </div>
                 </div>
-                <div class="col-lg-12">
-                    <div class="h-100 rounded">
-                        <iframe class="rounded w-100"
-                        style="height: 400px;" src="https://www.google.com/maps"
-                        loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
                     </div>
-                </div>
+                @endif
+
                 <div class="col-lg-7">
-                    <form action="" class="">
-                        <input type="text" class="w-100 form-control border-0 py-3 mb-4" placeholder="Votre Nom">
-                        <input type="email" class="w-100 form-control border-0 py-3 mb-4" placeholder="Votre Email">
-                        <textarea class="w-100 form-control border-0 mb-4" rows="5" cols="10" placeholder="Votre Message"></textarea>
-                        <button class="w-100 btn form-control border-secondary py-3 bg-white text-primary " type="submit">Submit</button>
-                    </form>
+                    <form method="POST" action="{{ route('contact.send') }}">
+    @csrf
+    <input type="text" name="name" class="w-100 form-control border-0 py-3 mb-4" placeholder="Votre Nom" required>
+    <input type="email" name="email" class="w-100 form-control border-0 py-3 mb-4" placeholder="Votre Email" required>
+    <textarea name="message" class="w-100 form-control border-0 mb-4" rows="5" cols="10" placeholder="Votre Message" required></textarea>
+    <button class="w-100 btn form-control border-secondary py-3 bg-white text-primary" type="submit">Envoyer</button>
+</form>
                 </div>
                 <div class="col-lg-5">
                     <div class="d-flex p-4 rounded mb-4 bg-white">

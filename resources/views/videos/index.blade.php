@@ -56,4 +56,29 @@
     </div>
 </div>
 
+
+
+<!-- Modal d'activation -->
+<div class="modal fade" id="codeModal" tabindex="-1" aria-labelledby="codeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content border-0 shadow rounded-4">
+      <div class="modal-header bg-success-subtle text-dark border-bottom border-success">
+
+        <h5 class="modal-title" id="codeModalLabel">Code d’activation requis</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+        <p>Veuillez entrer le code d’activation de cette vidéo avancée :</p>
+        <input type="text" id="activationCodeInput" class="form-control" placeholder="Votre code ici..." />
+        <div class="invalid-feedback mt-2 d-none" id="codeError">Le code est requis !</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-primary" id="validateCodeBtn">Valider</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 @endsection

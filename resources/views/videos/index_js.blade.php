@@ -31,6 +31,41 @@
         });
 }
 
+
+function demanderCodeActivation(callback) {
+    const codeModal = new bootstrap.Modal(document.getElementById('codeModal'));
+    const input = document.getElementById('activationCodeInput');
+    const error = document.getElementById('codeError');
+    const validateBtn = document.getElementById('validateCodeBtn');
+
+    input.value = '';
+    error.classList.add('d-none');
+    codeModal.show();
+
+    const handleValidation = () => {
+        const code = input.value.trim();
+
+        if (!code) {
+            error.classList.remove('d-none');
+            return;
+        }
+
+        codeModal.hide();
+        callback(code);
+    };
+
+    validateBtn.onclick = handleValidation;
+
+    // Soumission avec Entrée
+    input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleValidation();
+        }
+    });
+}
+
+
 function getLevelBadge(niveau) {
     switch (niveau) {
         case 'Débutant':
@@ -172,6 +207,20 @@ document.addEventListener('click', function (e) {
 
             if (response.data.success) {
                 showModal('Vidéo ajoutée au panier.');
+
+                    axios.get('/api/cart', {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    .then(res => {
+                        if (res.data.success) {
+                            updateCartCount(res.data.data);
+                        }
+                    });
+
+
+
             } else {
                 showModal('Erreur lors de l’ajout au panier.');
             }
@@ -221,28 +270,31 @@ document.addEventListener('click', function (e) {
             });
         };
 
-        if (niveau === 'Avancé') {
-            const code = prompt("Entrez le code d'activation de cette vidéo avancée :");
-            if (!code) return;
+     if (niveau === 'Avancé') {
+    demanderCodeActivation(function(code) {
+        // Appel API ici
+        const token = localStorage.getItem('token');
 
-            axios.post(`/api/videos/${videoId}/verify-code`, {
-                code: code
-            }, {
-                headers: { Authorization: `Bearer ${token}` }
-            })
-            .then(res => {
-                if (res.data.valid) {
-                    playVideo();
-                } else {
-                    alert('Code invalide ou expiré.');
-                }
-            })
-            .catch(() => {
-                alert('Erreur lors de la vérification du code.');
-            });
-        } else {
-            playVideo();
-        }
+        axios.post(`/api/videos/${videoId}/verify-code`, {
+            code: code
+        }, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        .then(res => {
+            if (res.data.valid) {
+                playVideo();
+            } else {
+                showModal('Code invalide ou expiré.', 'danger');
+            }
+        })
+        .catch(() => {
+            showModal('Erreur lors de la vérification du code.', 'danger');
+        });
+    });
+} else {
+    playVideo();
+}
+
     }
 });
 

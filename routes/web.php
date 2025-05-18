@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminInvoiceController;
-
+use App\Http\Controllers\ContactController;
 
 //page d acceuil
 Route::get('/', function () { return view('client.home'); });
@@ -41,3 +41,7 @@ Route::get('/admin/invoice', [AdminInvoiceController::class, 'show'])->name('inv
 Route::get('/videos/details/{id}', function ($id) {return view('videos.video-details');});
 
 Route::get('/mes-videos-viewees', function() { return view('videos.mes-videos-viewees');});
+
+
+Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
+

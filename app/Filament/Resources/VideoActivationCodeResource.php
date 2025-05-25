@@ -20,7 +20,7 @@ class VideoActivationCodeResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-key';
     protected static ?string $navigationLabel = 'Codes d\'activation';
     protected static ?string $pluralModelLabel = 'Codes d\'activation';
-
+protected static ?string $navigationGroup = 'Contenu e-learning';
     public static function form(Form $form): Form
     {
         $userId = request()->get('user_id');

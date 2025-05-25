@@ -24,12 +24,6 @@
                 <img src="{{ asset('img/mylogo.png') }}" alt="logo" class="img-fluid" style="max-width: 170px;">
             </a>
 
-
-
-
-
-
-
              <!-- Menu hamburger -->
             <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="fa fa-bars text-primary"></span>
@@ -191,3 +185,39 @@
 
 @include('auth.forgetPassword_js')
 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const dropdowns = document.querySelectorAll('.navbar .dropdown');
+
+    dropdowns.forEach(function (dropdown) {
+        const toggle = dropdown.querySelector('.dropdown-toggle');
+
+        toggle.addEventListener('click', function (e) {
+            // Fermer les autres dropdowns
+            dropdowns.forEach(d => {
+                if (d !== dropdown) {
+                    d.classList.remove('show');
+                    const menu = d.querySelector('.dropdown-menu');
+                    if (menu) menu.classList.remove('show');
+                }
+            });
+
+            // Toggle ce menu
+            dropdown.classList.toggle('show');
+            const menu = dropdown.querySelector('.dropdown-menu');
+            if (menu) menu.classList.toggle('show');
+        });
+    });
+
+    // Fermer le dropdown en cliquant ailleurs
+    document.addEventListener('click', function (e) {
+        dropdowns.forEach(function (dropdown) {
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('show');
+                const menu = dropdown.querySelector('.dropdown-menu');
+                if (menu) menu.classList.remove('show');
+            }
+        });
+    });
+});
+</script>

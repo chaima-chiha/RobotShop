@@ -21,7 +21,12 @@ class VideoFileResource extends Resource
 {
     protected static ?string $model = VideoFilee::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-document';
+
+    protected static ?string $navigationLabel = 'Video File';
+protected static ?string $pluralModelLabel = 'Video Files';
+protected static ?string $modelLabel = 'Video File';
+protected static ?string $navigationGroup = 'Contenu e-learning';
 
     public static function form(Form $form): Form
     {

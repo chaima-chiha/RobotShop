@@ -328,8 +328,26 @@
     }
 }
 */
-/* Animation Slide-Fade pour menu mobile */
 @media (max-width: 1199px) {
+    .navbar .nav-item .dropdown-menu {
+        display: none;
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        background: var(--bs-light);
+        box-shadow: none;
+        transform: none;
+        transition: none;
+        border-radius: 0;
+    }
+
+    .navbar .nav-item.show .dropdown-menu {
+        display: block;
+    }
+}
+
+/* Animation Slide-Fade pour menu mobile */
+/*@media (max-width: 1199px) {
     .navbar-collapse {
       opacity: 0;
       transform: translateY(-20px);
@@ -341,7 +359,7 @@
       transform: translateY(0);
     }
   }
-
+*/
 
 /*** Navbar End ***/
 

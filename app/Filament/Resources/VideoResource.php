@@ -19,7 +19,7 @@ class VideoResource extends Resource
     protected static ?string $model = Video::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-video-camera';
-
+protected static ?string $navigationGroup = 'Contenu e-learning';
     public static function form(Form $form): Form
     {
         return $form

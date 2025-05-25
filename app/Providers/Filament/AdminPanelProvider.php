@@ -35,10 +35,14 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+        ->sidebarCollapsibleOnDesktop()
             ->default()
             ->id('admin')
             ->path('admin')
+            ->brandLogo(asset('img/mylogo.png'))
+            ->brandLogoHeight('6rem')
             ->login()
+            ->favicon(asset('img/mylogo.png'))
             //->registration()
             ->colors([
                 'primary' => Color::Amber,

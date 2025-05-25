@@ -37,7 +37,7 @@
         <link href="https://vjs.zencdn.net/7.11.4/video-js.css" rel="stylesheet" />
         <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
 
-
+  <link rel="icon" href="{{ asset('img/mylogo.png') }}" type="image/x-icon">
 
     </head>
     <body>

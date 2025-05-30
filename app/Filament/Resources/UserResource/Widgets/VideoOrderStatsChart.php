@@ -4,7 +4,6 @@ namespace App\Filament\Resources\UserResource\Widgets;
 
 use Filament\Widgets\ChartWidget;
 use App\Models\Video;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class VideoOrderStatsChart extends ChartWidget
@@ -13,9 +12,8 @@ class VideoOrderStatsChart extends ChartWidget
 
     protected function getData(): array
     {
-        $videos = Video::with(['videoViews' => function ($query) {
-            $query->where('created_at', '>=', now()->subWeek());
-        }, 'videoViews.user.orders' => function ($query) {
+        // Récupère toutes les vidéos avec les vues et les utilisateurs associés (avec leurs commandes)
+        $videos = Video::with(['videoViews.user.orders' => function ($query) {
             $query->where('created_at', '>=', now()->subWeek());
         }])->get();
 
@@ -24,38 +22,47 @@ class VideoOrderStatsChart extends ChartWidget
 
         foreach ($videos as $video) {
             $count = 0;
+
             foreach ($video->videoViews as $view) {
                 $user = $view->user;
+
                 if ($user) {
-                    $count += $user->orders->count();
+                    $viewTime = $view->created_at;
+
+                    // Filtrer les commandes faites dans les 2 heures après la vue
+                    $relatedOrders = $user->orders->filter(function ($order) use ($viewTime) {
+                        return $order->created_at->greaterThanOrEqualTo($viewTime)
+                            && $order->created_at->lessThanOrEqualTo($viewTime->copy()->addHours(2));
+                    });
+
+                    $count += $relatedOrders->count();
                 }
             }
 
-            // Vérifie si la vidéo a des commandes associées
+            // N'afficher que les vidéos qui ont généré au moins une commande dans ce contexte
             if ($count > 0) {
-                $labels[] = Str::limit($video->title, 20); // Limite le titre
+                $labels[] = Str::limit($video->title, 20);
                 $data[] = $count;
+                $colors[] = '#' . substr(md5($video->id), 0, 6); // Génère une couleur hex unique par vidéo
+
             }
         }
-
-        return [
-            'labels' => $labels,
-            'datasets' => [
-                [
-                    'label' => 'Commandes générées',
-                    'data' => $data,
-                    'backgroundColor' => '#3b82f6',
-                    'borderColor' => '#1d4ed8',
-                    'fill' => true,
-
-                ],
+  return [
+        'labels' => $labels,
+        'datasets' => [
+            [
+                'label' => 'Commandes générées après visualisation',
+                'data' => $data,
+                'backgroundColor' => $colors,
+                'borderColor' => '#ffffff',
+                'borderWidth' => 1,
             ],
-            
-        ];
+        ],
+    ];
     }
 
     protected function getType(): string
     {
-        return 'bar'; // ou 'line' si tu veux une ligne
+        return 'doughnut'; // Tu peux changer en 'line' si besoin
     }
 }

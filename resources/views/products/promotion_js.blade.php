@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     }
                                 </div>
 
-                                              <div> ${product.available_stock}</div>
+                                             
                     <div>
                             ${product.available_stock > 0
                     ? `<span class="    m-2">En stock</span>`

@@ -51,7 +51,7 @@ protected static ?string $navigationGroup = 'Contenu e-learning';
                     ->label('Vidéo')
                     ->directory('videos')
                     ->acceptedFileTypes(['video/mp4', 'video/quicktime'])
-                    ->maxSize(502400) // 50MB
+                    ->maxSize(502400) //
                     ->downloadable()
                     ->columnSpanFull(),
 

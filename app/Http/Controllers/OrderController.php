@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use id;
-use App\Models\Cart;
+
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
-use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class OrderController extends Controller
 {
@@ -43,8 +41,6 @@ class OrderController extends Controller
             'data' => $order
         ]);
     }
-
-
 
     public function store(Request $request)
     {
@@ -130,7 +126,7 @@ public function update(Request $request, Order $order)
         'livraison' => 'required|string',
         'status' => 'nullable|in:en_attente,annulée',
         'items' => 'required|array',
-       
+
         'items.*.product_id' => 'nullable|exists:products,id',
         'items.*.video_id' => 'nullable|exists:videos,id',
         'items.*.quantity' => 'required|integer|min:1',

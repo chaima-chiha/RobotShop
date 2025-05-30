@@ -5,7 +5,7 @@ use App\Models\VideoActivationCode;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 class VideoController extends Controller
 {
 
@@ -15,67 +15,29 @@ class VideoController extends Controller
         return response()->json(['success' => true, 'data' => $video]);
     }
 
+public function index(Request $request)
+{
+    $niveau = $request->query('niveau');
 
-    /*public function index(Request $request)
-    {
-        $niveau = $request->query('niveau');
+    // Clé unique selon le niveau
+    $cacheKey = $niveau ? "videos_niveau_{$niveau}" : "videos_all";
 
-        $query = Video::with('category');
-
-        if ($niveau && in_array($niveau, ['Débutant', 'Intermédiaire', 'Avancé'])) {
-            $query->where('niveau', $niveau);
-        }
-
-        $videos = $query->get();
-
-        return response()->json([
-            'success' => true,
-            'data' => $videos
-        ]);
-    }*/
-
-    public function index(Request $request)
-    {
-        $niveau = $request->query('niveau');
-
+    // Mise en cache pendant 60 minutes
+    $videos = Cache::remember($cacheKey, 60, function () use ($niveau) {
         $query = Video::with(['category', 'files']);
 
         if ($niveau && in_array($niveau, ['Débutant', 'Intermédiaire', 'Avancé'])) {
             $query->where('niveau', $niveau);
         }
 
-        $videos = $query->get();
-
-        return response()->json([
-            'success' => true,
-            'data' => $videos
-        ]);
-    }
-/*
-    public function getWithProducts($id){
-    $thirtyDaysAgo = Carbon::now()->subDays(30);
-
-    $video = Video::with(['products.category', 'files'])->findOrFail($id);
-
-    $video->products->each(function ($product) use ($thirtyDaysAgo) {
-        $product->category_name = optional($product->category)->name;
-
-        // Attribut calculé : nouveau
-        $product->is_new = $product->created_at >= $thirtyDaysAgo || $product->updated_at >= $thirtyDaysAgo;
-
-        // Attribut calculé : promotion
-        $product->is_promoted = $product->promotion > 0;
-
-        unset($product->category); // On supprime l'objet category de la réponse
+        return $query->get();
     });
 
     return response()->json([
         'success' => true,
-        'data' => $video
+        'data' => $videos
     ]);
-}*/
-
-
+}
 
 
 public function getWithProducts($id)

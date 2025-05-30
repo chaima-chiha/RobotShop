@@ -6,7 +6,7 @@ use App\Models\Video;
 use App\Models\VideoView;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
+
 
 class ClientController extends Controller
 {
@@ -50,6 +50,7 @@ class ClientController extends Controller
     ]);
 }
 
+
 public function addVideoView(Request $request, Video $video)
 {
     $user = $request->user();
@@ -61,27 +62,36 @@ public function addVideoView(Request $request, Video $video)
         ], 401);
     }
 
-    VideoView::firstOrCreate([
-        'user_id' => $user->id,
-        'video_id' => $video->id,
-    ]);
+    // Cherche la vue existante
+    $view = VideoView::where('user_id', $user->id)
+        ->where('video_id', $video->id)
+        ->first();
+
+    if ($view) {
+        // Met à jour la date de visualisation à maintenant
+        $view->created_at = now();
+        $view->save();
+    } else {
+        // Crée une nouvelle vue
+        VideoView::create([
+            'user_id' => $user->id,
+            'video_id' => $video->id,
+            'created_at' => now(), // facultatif, Eloquent le fait automatiquement
+        ]);
+    }
 
     return response()->json([
         'success' => true,
-        'message' => 'Visionnage enregistré.'
+        'message' => 'Visualisation enregistrée.'
     ]);
 }
 
 
+
+
+
     public function videoHistory(Request $request)
     {
-       /*$user = $request->user();
-        $history = $user->videoViews()->with('video')->latest()->get();
-
-        return response()->json([
-            'success' => true,
-            'history' => $history
-        ]);*/
 
         $user = $request->user();
 

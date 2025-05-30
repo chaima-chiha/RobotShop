@@ -41,6 +41,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->brandLogo(asset('img/mylogo.png'))
             ->brandLogoHeight('6rem')
+            ->brandName('Robtshop Academy')
             ->login()
             ->favicon(asset('img/mylogo.png'))
             //->registration()

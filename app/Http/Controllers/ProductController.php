@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 
 class ProductController extends Controller
@@ -17,74 +18,66 @@ public function index(Request $request)
     $filter = $request->query('filter', 'all');
     $categoryId = $request->query('category', 'all');
 
-    // Récupérer tous les produits avec leur catégorie
-    $productsQuery = Product::with('category:id,name');
+    // Clé de cache basée sur les paramètres de filtre
+    $cacheKey = "products_{$filter}_category_{$categoryId}";
 
-    if ($categoryId !== 'all') {
-        $productsQuery->where('category_id', $categoryId);
-    }
+    // Durée du cache en minutes (ex: 60 min)
+    $products = Cache::remember($cacheKey, 60, function () use ($filter, $categoryId, $thirtyDaysAgo) {
+        $productsQuery = Product::with('category:id,name');
 
-    switch ($filter) {
-        case 'promo':
-            $productsQuery->where('promotion', '>', 0);
-            break;
-        case 'new':
-            $productsQuery->where(function ($query) use ($thirtyDaysAgo) {
-                $query->where('created_at', '>=', $thirtyDaysAgo)
-                      ->orWhere('updated_at', '>=', $thirtyDaysAgo);
-            });
-            break;
-        case 'price_asc':
-            $productsQuery->orderBy('price', 'asc');
-            break;
-        case 'price_desc':
-            $productsQuery->orderBy('price', 'desc');
-            break;
-        case 'name_asc':
-            $productsQuery->orderBy('name', 'asc');
-            break;
-        case 'name_desc':
-            $productsQuery->orderBy('name', 'desc');
-            break;
-    }
+        if ($categoryId !== 'all') {
+            $productsQuery->where('category_id', $categoryId);
+        }
 
-    $products = $productsQuery->get();
+        switch ($filter) {
+            case 'promo':
+                $productsQuery->where('promotion', '>', 0);
+                break;
+            case 'new':
+                $productsQuery->where(function ($query) use ($thirtyDaysAgo) {
+                    $query->where('created_at', '>=', $thirtyDaysAgo)
+                          ->orWhere('updated_at', '>=', $thirtyDaysAgo);
+                });
+                break;
+            case 'price_asc':
+                $productsQuery->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $productsQuery->orderBy('price', 'desc');
+                break;
+            case 'name_asc':
+                $productsQuery->orderBy('name', 'asc');
+                break;
+            case 'name_desc':
+                $productsQuery->orderBy('name', 'desc');
+                break;
+        }
 
-    $products->each(function ($product) use ($thirtyDaysAgo) {
-        $product->category_name = $product->category->name;
+        $products = $productsQuery->get();
 
-        // Marquer les produits récents
-        $product->is_new = $product->created_at >= $thirtyDaysAgo || $product->updated_at >= $thirtyDaysAgo;
+        $products->each(function ($product) use ($thirtyDaysAgo) {
+            $product->category_name = $product->category->name;
+            $product->is_new = $product->created_at >= $thirtyDaysAgo || $product->updated_at >= $thirtyDaysAgo;
+            $product->is_promoted = $product->promotion > 0;
+            unset($product->category);
+        });
 
-        // Marquer les produits en promotion
-        $product->is_promoted = $product->promotion > 0;
+        if (!in_array($filter, ['price_asc', 'price_desc', 'name_asc', 'name_desc'])) {
+            $products = $products->sortByDesc('is_new')->sortByDesc('is_promoted')->values();
+        } else {
+            $products = $products->values();
+        }
 
-        unset($product->category);
+        return $products;
     });
-
-    // Appliquer le tri par nouveauté et promotion uniquement si aucun tri par prix ou nom n'est appliqué
-    if (!in_array($filter, ['price_asc', 'price_desc', 'name_asc', 'name_desc'])) {
-        $sorted = $products->sortByDesc('is_new')->sortByDesc('is_promoted')->values();
-    } else {
-        $sorted = $products->values();
-    }
 
     return response()->json([
         'success' => true,
-        'data' => $sorted
+        'data' => $products
     ]);
 }
 
 
-   /* public function show($id)
-    {
-        $product = Product::with(['category', 'videos'])->findOrFail($id);
-
-        return response()->json([
-            'success' => true,
-            'data' => $product
-        ]);
-    }*/
 
     public function show($id)
 {
